@@ -1,0 +1,12 @@
+Yapılan Düzenlemeler:
+1.Dinamik Ekran Boyutu ve Görev Çubuğu Uyarlaması:MainWindow.center on screen metodu eklendi.Sabit
+128ex8ee boyutu, küçük ekranlarda (Gr.1366x768) veya %125-%150 Windows ekran dlceklemesinde (DPI
+scaling) ekran disina taşmaması icin screen.availableGeometry() (gérev cubugu harig net alan) Uzerinden
+kontrol edilerek sinirlandirildi.
+2.Ekranin Merkezine Konumlandirma:Pencerenin sol-iist hesaplanarak aktif ekranin tam merkezine
+tasindi self.move(x, y)
+3.İlk Gösterimde Otomatik Ortalama:MainWindow.showEvent icine tek seferlik tetikleyici eklenerek pencerenin
+ilk render anında her zaman ekranın ortasında açılması garanti altına alındı.
+4.Test ve Wiki Güncellemesi:tests/test_ui_components.py icine test eklendi (42/42 test başarılı),
+verify.py sifir bulgu ile dogrulandi ve docs/wiki/ui_system.md ile docs/wiki/log.md giincellendi.
+4 files changed +55-3 > Review

@@ -1,0 +1,5 @@
+Acik Kaynak Ansiklopedi Metni-Optik Karakter Tanima Testi
+Bilgisayarli goru ve derin ogrenme yontemleri, taranmis belgelerdeki
+egri satirlari ve renkli kalem ciziklerini temizlemek icin kullanilir.
+Hough donusumu egim acisini bulurken, Telea inpainting algoritmasi
+harflerin uzerindeki kirmizi ve mavi sekilleri dokuyu koruyarak siler.

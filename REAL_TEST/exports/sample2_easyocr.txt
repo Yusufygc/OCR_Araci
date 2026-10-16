@@ -1,0 +1,15 @@
+3. Adım: GörüntüÖnişleme (OpenCV) Algoritmalarının Yenilenmesi
+OpenCV 5.x Uyumlu deskew image_processor.py   içinde hatalı  minAreaRect yaklaşımı yerine; yatay
+morfolojik satır bağlama ( MORPH_RECT (25, 3) ) + Hough Line Transform ( HoughLinesP ) ile [-25" +25"]
+arasındaki gerçek satır açılarını medyan ile hesaplayan_estimate_skew_angle algoritmasına geçildi. Kenar
+dolgusu beyaz ( 255 ) yapıldı:
+HSV Doygunluk Tabanlı remove_color_annotations :remove_color_annotations artık remove_red ve
+remove_blueparametrelerini kullanarak yüksek doygunluklu renkli kalem/fosforlu izlerini temizlerken; siyah/gri
+metinlerin yumuşak kenarlarını (anti-aliasing) koruyor.
+Çözünürlüğe Duyarlı binarize_adaptive binarize_adaptive içinde sabit block_size-11 yerine görsel
+çözünürlüğüne göre dinamik blok boyutu ( [15, 51] aralığında) hesaplanarak büyük görsellerde harflerin içinin
+boşalması önlendi.
+Otomatik Kenar Boşluğu ve Küçük Metin Büyütme:prepare_for_ocr sharpen   ve
+add_border_padding   eklenerek küçük kırpımların ' 160px ) otomatik 2x büyütülüp netlestirilmesi ve etrafına
+16px beyaz çerçeve eklenmesi sağlandı.
+Boru Hattı Sıralaması:main_window.py içinde geometrik deskew adımı; gürültü ve kontrast filtrelerinin

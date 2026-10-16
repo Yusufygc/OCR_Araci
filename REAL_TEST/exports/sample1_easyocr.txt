@@ -1,0 +1,12 @@
+Yapılan Düzenlemeler:
+1. Dinamik Ekran Boyutu ve Görev Çubuğu Uyarlaması:MainWindow.center_on_screen   metodu eklendi. Sabit
+1280x800  boyutu, küçük ekranlarda (ör. 1366x768) veya %125-%150 Windows ekran ölçeklemesinde (DPI
+scaling) ekran dışına taşmaması için screen.availableGeometry() (görev çubuğu hariç net alan) üzerinden
+kontrol edilerek sınırlandırıldı.
+2 Ekranın Merkezine Konumlandırma: Pencerenin sol-üst koordinatları hesaplanarak aktif ekranın tam merkezine
+taşındı ( self.move(x, y) )
+3.İlk Gösterimde Otomatik Ortalama:MainWindow.showEvent   içine tek seferlik tetikleyici eklenerek pencerenin
+ilk render anında her zaman ekranın ortasında açılması garanti altına alındı:
+4. Test ve Wiki Güncellemesi:tests/test_ui_components.py   içine test eklendi (42/42 test başarılı) ,
+verify.py sıfir bulgu ile doğrulandı ve docs/wikilui_system.md ile docs/wiki/log.md güncellendi
+files changed +55-3 Review

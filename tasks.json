@@ -1,0 +1,416 @@
+{
+ "version": 1,
+ "generated": "2026-10-17T00:25:46",
+ "project": "C:\\2UYGULAMALAR\\P021-OCR",
+ "tool_root": "C:\\Users\\yusuf\\AppData\\Local\\Programs\\GitClean Archiver\\_internal",
+ "batch_size": 15,
+ "health_score": 97.4,
+ "tasks": [
+  {
+   "id": "W0-001",
+   "wave": 0,
+   "rule": "missing-license",
+   "label": "LICENSE eksik",
+   "risk": "düşük",
+   "file": "tasks/W0-001-missing-license.md",
+   "items": [
+    {
+     "fingerprint": "b14205914248",
+     "rule": "missing-license",
+     "severity": "LOW",
+     "category": "hygiene",
+     "path": ".",
+     "line": null,
+     "lines": [],
+     "title": "LICENSE Eksik",
+     "message": "Proje kökünde beklenen 'license' bulunamadı.",
+     "recommendation": "Lisans dosyası ekleyin (lisanssız kod varsayılan olarak başkalarınca kullanılamaz).",
+     "approximate": false,
+     "count": 1
+    }
+   ]
+  },
+  {
+   "id": "W2-001",
+   "wave": 2,
+   "rule": "swallowed-exception",
+   "label": "Yutulan hata",
+   "risk": "orta",
+   "file": "tasks/W2-001-swallowed-exception.md",
+   "items": [
+    {
+     "fingerprint": "4f970391523b",
+     "rule": "swallowed-exception",
+     "severity": "MEDIUM",
+     "category": "reliability",
+     "path": "src/ui/components/image_canvas.py",
+     "line": 158,
+     "lines": [
+      158
+     ],
+     "title": "Hata sessizce yutuluyor (except Exception: pass): image_canvas.py",
+     "message": "Hata sessizce yutuluyor (except Exception: pass). 1 yerde, satır: 158.",
+     "recommendation": "Hatayı loglayın (`logger.exception`), daha dar bir tür yakalayın veya yeniden fırlatın.",
+     "approximate": false,
+     "count": 1
+    }
+   ]
+  },
+  {
+   "id": "W3-001",
+   "wave": 3,
+   "rule": "unused-import",
+   "label": "Kullanılmayan import",
+   "risk": "düşük",
+   "file": "tasks/W3-001-unused-import.md",
+   "items": [
+    {
+     "fingerprint": "ab2cd59125e2",
+     "rule": "unused-import",
+     "severity": "LOW",
+     "category": "deadcode",
+     "path": "src/core/engines/easyocr_engine.py",
+     "line": 28,
+     "lines": [
+      28
+     ],
+     "title": "Kullanılmayan Import: easyocr_engine.py",
+     "message": "'easyocr' içe aktarılmış ama kullanılmıyor (satır 28).",
+     "recommendation": "Kullanılmayan importları silin; yan etkisi olan modüller için nedenini bir yorumla belirtin.",
+     "approximate": false,
+     "count": 1
+    },
+    {
+     "fingerprint": "2913b03f5ade",
+     "rule": "unused-import",
+     "severity": "LOW",
+     "category": "deadcode",
+     "path": "src/core/processing/image_processor.py",
+     "line": 3,
+     "lines": [
+      3
+     ],
+     "title": "Kullanılmayan Import: image_processor.py",
+     "message": "'Optional' içe aktarılmış ama kullanılmıyor (satır 3).",
+     "recommendation": "Kullanılmayan importları silin; yan etkisi olan modüller için nedenini bir yorumla belirtin.",
+     "approximate": false,
+     "count": 1
+    },
+    {
+     "fingerprint": "a8108cd31df1",
+     "rule": "unused-import",
+     "severity": "LOW",
+     "category": "deadcode",
+     "path": "src/ui/components/filter_panel.py",
+     "line": 2,
+     "lines": [
+      2
+     ],
+     "title": "Kullanılmayan Import: filter_panel.py",
+     "message": "'QHBoxLayout' içe aktarılmış ama kullanılmıyor (satır 2).",
+     "recommendation": "Kullanılmayan importları silin; yan etkisi olan modüller için nedenini bir yorumla belirtin.",
+     "approximate": false,
+     "count": 4
+    },
+    {
+     "fingerprint": "39d6173de646",
+     "rule": "unused-import",
+     "severity": "LOW",
+     "category": "deadcode",
+     "path": "src/ui/components/filter_panel.py",
+     "line": 2,
+     "lines": [
+      2
+     ],
+     "title": "Kullanılmayan Import: filter_panel.py",
+     "message": "'QSlider' içe aktarılmış ama kullanılmıyor (satır 2).",
+     "recommendation": "Kullanılmayan importları silin; yan etkisi olan modüller için nedenini bir yorumla belirtin.",
+     "approximate": false,
+     "count": 4
+    },
+    {
+     "fingerprint": "bdf2c5f0fabf",
+     "rule": "unused-import",
+     "severity": "LOW",
+     "category": "deadcode",
+     "path": "src/ui/components/filter_panel.py",
+     "line": 2,
+     "lines": [
+      2
+     ],
+     "title": "Kullanılmayan Import: filter_panel.py",
+     "message": "'QLabel' içe aktarılmış ama kullanılmıyor (satır 2).",
+     "recommendation": "Kullanılmayan importları silin; yan etkisi olan modüller için nedenini bir yorumla belirtin.",
+     "approximate": false,
+     "count": 4
+    },
+    {
+     "fingerprint": "9637806e5ac8",
+     "rule": "unused-import",
+     "severity": "LOW",
+     "category": "deadcode",
+     "path": "src/ui/components/filter_panel.py",
+     "line": 6,
+     "lines": [
+      6
+     ],
+     "title": "Kullanılmayan Import: filter_panel.py",
+     "message": "'Qt' içe aktarılmış ama kullanılmıyor (satır 6).",
+     "recommendation": "Kullanılmayan importları silin; yan etkisi olan modüller için nedenini bir yorumla belirtin.",
+     "approximate": false,
+     "count": 4
+    },
+    {
+     "fingerprint": "69cf09343c79",
+     "rule": "unused-import",
+     "severity": "LOW",
+     "category": "deadcode",
+     "path": "src/ui/components/image_canvas.py",
+     "line": 5,
+     "lines": [
+      5
+     ],
+     "title": "Kullanılmayan Import: image_canvas.py",
+     "message": "'QFileDialog' içe aktarılmış ama kullanılmıyor (satır 5).",
+     "recommendation": "Kullanılmayan importları silin; yan etkisi olan modüller için nedenini bir yorumla belirtin.",
+     "approximate": false,
+     "count": 1
+    },
+    {
+     "fingerprint": "d1bdc400efd1",
+     "rule": "unused-import",
+     "severity": "LOW",
+     "category": "deadcode",
+     "path": "src/ui/components/text_editor.py",
+     "line": 5,
+     "lines": [
+      5
+     ],
+     "title": "Kullanılmayan Import: text_editor.py",
+     "message": "'Qt' içe aktarılmış ama kullanılmıyor (satır 5).",
+     "recommendation": "Kullanılmayan importları silin; yan etkisi olan modüller için nedenini bir yorumla belirtin.",
+     "approximate": false,
+     "count": 1
+    },
+    {
+     "fingerprint": "a896949b56bc",
+     "rule": "unused-import",
+     "severity": "LOW",
+     "category": "deadcode",
+     "path": "src/ui/main_window.py",
+     "line": 2,
+     "lines": [
+      2
+     ],
+     "title": "Kullanılmayan Import: main_window.py",
+     "message": "'cv2' içe aktarılmış ama kullanılmıyor (satır 2).",
+     "recommendation": "Kullanılmayan importları silin; yan etkisi olan modüller için nedenini bir yorumla belirtin.",
+     "approximate": false,
+     "count": 4
+    },
+    {
+     "fingerprint": "fcd44b76b1b2",
+     "rule": "unused-import",
+     "severity": "LOW",
+     "category": "deadcode",
+     "path": "src/ui/main_window.py",
+     "line": 4,
+     "lines": [
+      4
+     ],
+     "title": "Kullanılmayan Import: main_window.py",
+     "message": "'QThread' içe aktarılmış ama kullanılmıyor (satır 4).",
+     "recommendation": "Kullanılmayan importları silin; yan etkisi olan modüller için nedenini bir yorumla belirtin.",
+     "approximate": false,
+     "count": 4
+    },
+    {
+     "fingerprint": "4289148d758f",
+     "rule": "unused-import",
+     "severity": "LOW",
+     "category": "deadcode",
+     "path": "src/ui/main_window.py",
+     "line": 5,
+     "lines": [
+      5
+     ],
+     "title": "Kullanılmayan Import: main_window.py",
+     "message": "'QGroupBox' içe aktarılmış ama kullanılmıyor (satır 5).",
+     "recommendation": "Kullanılmayan importları silin; yan etkisi olan modüller için nedenini bir yorumla belirtin.",
+     "approximate": false,
+     "count": 4
+    },
+    {
+     "fingerprint": "3f06508ceccf",
+     "rule": "unused-import",
+     "severity": "LOW",
+     "category": "deadcode",
+     "path": "src/ui/main_window.py",
+     "line": 10,
+     "lines": [
+      10
+     ],
+     "title": "Kullanılmayan Import: main_window.py",
+     "message": "'QIcon' içe aktarılmış ama kullanılmıyor (satır 10).",
+     "recommendation": "Kullanılmayan importları silin; yan etkisi olan modüller için nedenini bir yorumla belirtin.",
+     "approximate": false,
+     "count": 4
+    },
+    {
+     "fingerprint": "4fefb22af11e",
+     "rule": "unused-import",
+     "severity": "LOW",
+     "category": "deadcode",
+     "path": "src/ui/workers/ocr_worker.py",
+     "line": 3,
+     "lines": [
+      3
+     ],
+     "title": "Kullanılmayan Import: ocr_worker.py",
+     "message": "'Optional' içe aktarılmış ama kullanılmıyor (satır 3).",
+     "recommendation": "Kullanılmayan importları silin; yan etkisi olan modüller için nedenini bir yorumla belirtin.",
+     "approximate": false,
+     "count": 1
+    }
+   ]
+  },
+  {
+   "id": "W4-001",
+   "wave": 4,
+   "rule": "missing-ci",
+   "label": "CI yok",
+   "risk": "orta",
+   "file": "tasks/W4-001-missing-ci.md",
+   "items": [
+    {
+     "fingerprint": "d219898baff6",
+     "rule": "missing-ci",
+     "severity": "LOW",
+     "category": "hygiene",
+     "path": ".",
+     "line": null,
+     "lines": [],
+     "title": "CI Yapılandırması Yok",
+     "message": "Proje kökünde beklenen 'ci' bulunamadı.",
+     "recommendation": "Testleri her değişiklikte çalıştıran bir CI iş akışı ekleyin (GitHub Actions, GitLab CI ...).",
+     "approximate": false,
+     "count": 1
+    }
+   ]
+  },
+  {
+   "id": "W4-002",
+   "wave": 4,
+   "rule": "missing-readme",
+   "label": "README eksik",
+   "risk": "düşük",
+   "file": "tasks/W4-002-missing-readme.md",
+   "items": [
+    {
+     "fingerprint": "dde26f1bcb3f",
+     "rule": "missing-readme",
+     "severity": "LOW",
+     "category": "hygiene",
+     "path": ".",
+     "line": null,
+     "lines": [],
+     "title": "README Eksik",
+     "message": "Proje kökünde beklenen 'readme' bulunamadı.",
+     "recommendation": "Projeyi, kurulumu ve kullanımı anlatan bir README ekleyin.",
+     "approximate": false,
+     "count": 1
+    }
+   ]
+  },
+  {
+   "id": "W4-003",
+   "wave": 4,
+   "rule": "unpinned-dependencies",
+   "label": "Sabitlenmemiş bağımlılık",
+   "risk": "orta",
+   "file": "tasks/W4-003-unpinned-dependencies.md",
+   "items": [
+    {
+     "fingerprint": "fd00f83bd055",
+     "rule": "unpinned-dependencies",
+     "severity": "LOW",
+     "category": "dependency",
+     "path": "requirements.txt",
+     "line": null,
+     "lines": [],
+     "title": "Sabitlenmemiş Bağımlılıklar: requirements.txt",
+     "message": "7 bağımlılığın sürümü sabit değil: PySide6>=6.6.0, opencv-python>=4.8.0, pillow>=10.0.0, numpy>=1.24.0, easyocr>=1.7.0, pytesseract>=0.3.10, python-docx>=1.0.0. Her kurulumda farklı sürüm gelebilir (tekrarlanamayan derleme, tedarik zinciri riski).",
+     "recommendation": "Sürümleri tam sürüme sabitleyin (==, ^/~ aralığı) ve kilit dosyası (lock) kullanın.",
+     "approximate": false,
+     "count": 7
+    }
+   ]
+  },
+  {
+   "id": "W5-001",
+   "wave": 5,
+   "rule": "low-test-ratio",
+   "label": "Düşük test oranı",
+   "risk": "orta",
+   "file": "tasks/W5-001-low-test-ratio.md",
+   "items": [
+    {
+     "fingerprint": "95b255a21d15",
+     "rule": "low-test-ratio",
+     "severity": "MEDIUM",
+     "category": "testing",
+     "path": ".",
+     "line": null,
+     "lines": [],
+     "title": "Düşük Test Oranı: %6",
+     "message": "Test kodu / kaynak kod satır oranı 0.06 (57 / 969); hedef en az 0.3.",
+     "recommendation": "Testsiz kalan modüllere öncelikle karmaşık ve sık değişen kodlardan başlayarak test ekleyin.",
+     "approximate": true,
+     "count": 1
+    }
+   ]
+  },
+  {
+   "id": "W6-001",
+   "wave": 6,
+   "rule": "function-metrics",
+   "label": "Karmaşık / uzun işlevler",
+   "risk": "orta",
+   "file": "tasks/W6-001-function-metrics.md",
+   "items": [
+    {
+     "fingerprint": "e9e3278d8388",
+     "rule": "function-metrics",
+     "severity": "LOW",
+     "category": "complexity",
+     "path": "src/core/engines/easyocr_engine.py",
+     "line": 41,
+     "lines": [
+      41
+     ],
+     "title": "Karmaşık Fonksiyon: extract_text()",
+     "message": "extract_text() eşikleri aşıyor: satır sayısı 52 (Eşik: 50).",
+     "recommendation": "Fonksiyonu tek sorumluluğa sahip daha küçük fonksiyonlara bölün.",
+     "approximate": false,
+     "count": 1
+    },
+    {
+     "fingerprint": "91026a23dfc4",
+     "rule": "function-metrics",
+     "severity": "LOW",
+     "category": "complexity",
+     "path": "src/ui/main_window.py",
+     "line": 39,
+     "lines": [
+      39
+     ],
+     "title": "Karmaşık Fonksiyon: init_ui()",
+     "message": "init_ui() eşikleri aşıyor: satır sayısı 75 (Eşik: 50).",
+     "recommendation": "Fonksiyonu tek sorumluluğa sahip daha küçük fonksiyonlara bölün.",
+     "approximate": false,
+     "count": 1
+    }
+   ]
+  }
+ ]
+}
