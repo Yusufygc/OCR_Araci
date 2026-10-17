@@ -31,14 +31,7 @@ class MultiRegionStrategy(IScanStrategy):
     @staticmethod
     def _shift_details(details: List[Dict[str, Any]], offset_x: int, offset_y: int) -> List[Dict[str, Any]]:
         """Offsets crop bounding box coordinates back to canvas root space."""
-        shifted = []
-        for d in details:
-            orig_bbox = d.get("bbox", [])
-            new_bbox = [[pt[0] + offset_x, pt[1] + offset_y] for pt in orig_bbox]
-            item = dict(d)
-            item["bbox"] = new_bbox
-            shifted.append(item)
-        return shifted
+        return ImageProcessor.shift_details_coordinates(details, offset_x, offset_y)
 
     def execute(
         self,

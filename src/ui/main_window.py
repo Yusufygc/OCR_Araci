@@ -47,6 +47,7 @@ class MainWindow(QMainWindow):
         self._raw_image: Optional[np.ndarray] = None
         self._processed_image: Optional[np.ndarray] = None
         self._ocr_worker: Optional[OCRWorkerThread] = None
+        self._ocr_offset = (0, 0)
 
         self.resize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT)
         self.setMinimumSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT)
@@ -268,7 +269,14 @@ class MainWindow(QMainWindow):
 
     def start_ocr_process(self):
         """Launches non-blocking OCR worker thread."""
-        target_image = self.canvas.get_cropped_cv_image()
+        scan_mode = self.cmb_scan_mode.currentData()
+        if scan_mode == "multi_region":
+            # Strateji kendi bölgelerini tam görselden (görsel koordinatlarıyla) keser.
+            target_image = self.canvas.get_full_cv_image()
+            self._ocr_offset = (0, 0)
+        else:
+            target_image = self.canvas.get_cropped_cv_image()
+            self._ocr_offset = self.canvas.get_primary_region_offset()
         if target_image is None:
             QMessageBox.warning(self, "Uyarı", UIStrings.MSG_NO_IMAGE_BODY)
             return
@@ -277,7 +285,7 @@ class MainWindow(QMainWindow):
         if ocr_engine is None:
             return
 
-        strategy = self._resolve_scan_strategy(self.cmb_scan_mode.currentData())
+        strategy = self._resolve_scan_strategy(scan_mode)
         self.overlay_manager.clear()
         self.btn_run_ocr.setEnabled(False)
         self.progress_bar.setVisible(True)
@@ -296,7 +304,10 @@ class MainWindow(QMainWindow):
 
         if result.success:
             self.text_editor.set_text(result.text)
-            self.overlay_manager.render_boxes(result.details)
+            offset_x, offset_y = self._ocr_offset
+            self.overlay_manager.render_boxes(
+                ImageProcessor.shift_details_coordinates(result.details, offset_x, offset_y)
+            )
             self.lbl_status.setText(UIStrings.STATUS_SUCCESS.format(time=result.processing_time, confidence=result.confidence*100))
             self.statusBar().showMessage(UIStrings.STATUS_BAR_SUCCESS.format(time=result.processing_time))
         else:

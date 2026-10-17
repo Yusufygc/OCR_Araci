@@ -79,4 +79,9 @@ btn_reset.setIcon(IconProvider.get_icon(IconType.RESET_FILTERS))
   - **Görünürlük Kontrolü (`chk_overlay`):** Kullanıcı "Metin Kutularını Göster" onay kutusu ile kutu katmanını istediği an açıp kapatabilir.
   - **Çoklu ROI Alanı Seçimi:** Tuval üzerinde Shift tuşuna basılı tutularak birden fazla alan seçilebilir, sağ tıklandığında seçimler temizlenir.
 
+## 7. OCR Akışı Koordinat ve Dayanıklılık Kuralları (`MainWindow.start_ocr_process`)
 
+- **Tek ROI / tam görsel (`line`, `block`):** Worker'a seçili ilk bölgenin kırpımı verilir; sonuç kutuları `ImageCanvas.get_primary_region_offset()` ofsetiyle `ImageProcessor.shift_details_coordinates` üzerinden tam görsel uzayına çevrilip tuvale çizilir.
+- **Çoklu bölge (`multi_region`):** Strateji bölgeleri görsel koordinatlarında tuttuğu için worker'a kırpım değil `ImageCanvas.get_full_cv_image()` (tam görsel) verilir; `MultiRegionStrategy` her bölgeyi kendisi keser ve kutuları ofsetler.
+- **`CanvasOverlayManager.clear()`:** `QGraphicsScene.clear()` (yeni görsel/filtre) öğelerin C++ nesnesini zaten sildiği için `removeItem` çağrısı `RuntimeError` yakalanarak güvenli yapıldı; aksi halde OCR sonrası ikinci OCR, filtre değişimi veya yeni görsel yükleme çöküyordu.
+- Testler: `tests/test_main_window_ocr_flow.py`, `tests/test_overlay_manager.py`. Bkz. [[ocr_engines]].

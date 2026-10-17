@@ -1,7 +1,7 @@
 import os
 import cv2
 import numpy as np
-from typing import Tuple, Union, Optional, Any
+from typing import Any, Dict, List, Optional, Tuple, Union
 from PIL import Image
 
 MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024  # 50 MB
@@ -138,19 +138,54 @@ class ImageProcessor:
         )
 
     @staticmethod
-    def prepare_for_ocr(image: np.ndarray, pad: int = DEFAULT_BORDER_PAD) -> np.ndarray:
-        """Upscales small crops or low-height wide strips and adds border margin for optimal OCR recognition."""
+    def prepare_for_ocr_with_transform(image: np.ndarray, pad: int = DEFAULT_BORDER_PAD) -> Tuple[np.ndarray, float, int]:
+        """
+        Upscales small crops or low-height wide strips and adds border margin for optimal OCR recognition.
+        Returns (prepared_image, scale, pad) so detected coordinates can be mapped back to the input image space.
+        """
         img = image.copy()
         h, w = img.shape[:2]
+        scale, applied_pad = 1.0, 0
         is_tiny = h > 0 and w > 0 and (h < MIN_OCR_DIMENSION or w < MIN_OCR_DIMENSION)
         is_wide_strip = w >= WIDE_STRIP_MIN_W and 0 < h < WIDE_STRIP_MAX_H
         if is_tiny or is_wide_strip:
             if max(h, w) * UPSCALE_FACTOR <= MAX_IMAGE_DIMENSION:
                 img = cv2.resize(img, None, fx=UPSCALE_FACTOR, fy=UPSCALE_FACTOR, interpolation=cv2.INTER_CUBIC)
+                scale = UPSCALE_FACTOR
                 if is_tiny:
                     img = ImageProcessor.sharpen(img)
             img = ImageProcessor.add_border_padding(img, pad=pad)
-        return img
+            applied_pad = max(0, pad)
+        return img, scale, applied_pad
+
+    @staticmethod
+    def prepare_for_ocr(image: np.ndarray, pad: int = DEFAULT_BORDER_PAD) -> np.ndarray:
+        """Upscales small crops or low-height wide strips and adds border margin for optimal OCR recognition."""
+        return ImageProcessor.prepare_for_ocr_with_transform(image, pad)[0]
+
+    @staticmethod
+    def restore_details_coordinates(details: List[Dict[str, Any]], scale: float, pad: int) -> List[Dict[str, Any]]:
+        """Maps bounding boxes detected on a prepare_for_ocr image back to the original image coordinates."""
+        if scale == 1.0 and pad == 0:
+            return details
+        restored = []
+        for d in details:
+            item = dict(d)
+            item["bbox"] = [[(pt[0] - pad) / scale, (pt[1] - pad) / scale] for pt in d.get("bbox", [])]
+            restored.append(item)
+        return restored
+
+    @staticmethod
+    def shift_details_coordinates(details: List[Dict[str, Any]], offset_x: float, offset_y: float) -> List[Dict[str, Any]]:
+        """Offsets crop-space bounding boxes back into the full image coordinate space."""
+        if not offset_x and not offset_y:
+            return details
+        shifted = []
+        for d in details:
+            item = dict(d)
+            item["bbox"] = [[pt[0] + offset_x, pt[1] + offset_y] for pt in d.get("bbox", [])]
+            shifted.append(item)
+        return shifted
 
     @staticmethod
     def binarize_adaptive(image: np.ndarray, block_size: int = 0, c: int = 8) -> np.ndarray:
@@ -212,14 +247,16 @@ class ImageProcessor:
         masked = scribble_mask > 0
         result[masked] = ((telea[masked].astype(np.uint16) + v_bridged[masked].astype(np.uint16)) // 2).astype(np.uint8)
         core_thick = cv2.erode(scribble_mask, np.ones(THICK_CORE_KERNEL, np.uint8))
-        result[core_thick > 0] = WHITE_PIXEL
+        background = int(ImageProcessor.get_background_color(gray))
+        result[core_thick > 0] = background
         return result
 
     @staticmethod
     def _estimate_skew_angle(gray: np.ndarray) -> float:
         """Estimates text baseline skew angle in degrees using morphological line connection and Hough lines."""
-        inv_gray = cv2.bitwise_not(gray)
-        thresh = cv2.threshold(inv_gray, 0, WHITE_PIXEL, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
+        # Metin her zaman beyaz (ön plan) maske olmalı: açık zeminde koyu metin ters çevrilir, koyu zeminde olduğu gibi kalır.
+        text_gray = gray if ImageProcessor.is_dark_image(gray) else cv2.bitwise_not(gray)
+        thresh = cv2.threshold(text_gray, 0, WHITE_PIXEL, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
         kernel = cv2.getStructuringElement(cv2.MORPH_RECT, MORPH_KERNEL_SIZE)
         dilated = cv2.dilate(thresh, kernel, iterations=1)
 
@@ -250,7 +287,7 @@ class ImageProcessor:
         (h, w) = image.shape[:2]
         center = (w // 2, h // 2)
         rot_mat = cv2.getRotationMatrix2D(center, angle, 1.0)
-        border_val = WHITE_PIXEL if len(image.shape) == 2 else (WHITE_PIXEL, WHITE_PIXEL, WHITE_PIXEL)
+        border_val = ImageProcessor.get_background_color(image)
         return cv2.warpAffine(
             image, rot_mat, (w, h), flags=cv2.INTER_CUBIC,
             borderMode=cv2.BORDER_CONSTANT, borderValue=border_val

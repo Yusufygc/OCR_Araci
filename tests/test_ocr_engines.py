@@ -129,6 +129,42 @@ class TestOCREnginesAndFactory(unittest.TestCase):
         self.assertAlmostEqual(conf, 0.91)
 
 
+class TestEngineBBoxCoordinates(unittest.TestCase):
+    """OCR kutuları, ön hazırlık (2x büyütme + pad) sonrası bile orijinal görsel uzayında dönmeli."""
+
+    def test_tesseract_details_use_original_image_space(self):
+        import cv2
+        engine = TesseractEngine()
+        if not engine.is_available:
+            self.skipTest("Tesseract yüklü değil")
+        # Geniş şerit (w>=500, h<360): 2x büyütme + 16px pad uygulanır.
+        img = np.full((120, 700, 3), 255, dtype=np.uint8)
+        cv2.putText(img, "HELLO WORLD", (40, 80), cv2.FONT_HERSHEY_SIMPLEX, 1.6, (0, 0, 0), 3)
+        res = engine.extract_text(img, lang="eng")
+        self.assertTrue(res.success)
+        self.assertTrue(res.details)
+        for d in res.details:
+            for x, y in d["bbox"]:
+                self.assertLessEqual(x, 700 + 2)
+                self.assertLessEqual(y, 120 + 2)
+        self.assertLess(min(p[0] for d in res.details for p in d["bbox"]), 60)
+
+    def test_easyocr_details_use_original_image_space(self):
+        engine = EasyOCREngine(gpu=False)
+        reader = MagicMock()
+        # Hazırlanmış (2x + 16px pad) uzayda tek kutu: orijinalde (50,25)-(150,50)
+        reader.readtext.return_value = [
+            ([[116, 66], [316, 66], [316, 116], [116, 116]], "Merhaba", 0.95)
+        ]
+        engine._reader = reader
+        engine._loaded_langs = ["tr", "en"]
+        img = np.full((250, 600, 3), 255, dtype=np.uint8)
+        res = engine.extract_text(img, lang="tur+eng")
+        self.assertTrue(res.success)
+        self.assertEqual(res.details[0]["bbox"][0], [50.0, 25.0])
+        self.assertEqual(res.details[0]["bbox"][2], [150.0, 50.0])
+
+
 if __name__ == "__main__":
     unittest.main()
 

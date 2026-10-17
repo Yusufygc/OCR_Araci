@@ -65,9 +65,10 @@ class TestImageProcessorUnit(unittest.TestCase):
         cleaned = ImageProcessor.remove_color_annotations(self.bgr_img)
         self.assertIsNotNone(cleaned)
         self.assertEqual(cleaned.shape[:2], self.bgr_img.shape[:2])
-        # Red and blue saturated boxes should be turned into white (255)
-        self.assertEqual(cleaned[10, 10], 255)
-        self.assertEqual(cleaned[80, 120], 255)
+        # Red and blue saturated boxes should be filled with the background tone (dark synthetic canvas)
+        bg = int(ImageProcessor.get_background_color(ImageProcessor.to_grayscale(self.bgr_img)))
+        self.assertEqual(cleaned[10, 10], bg)
+        self.assertEqual(cleaned[80, 120], bg)
 
         # Already grayscale input should return as-is
         gray_in = ImageProcessor.to_grayscale(self.bgr_img)
@@ -76,7 +77,7 @@ class TestImageProcessorUnit(unittest.TestCase):
 
         #Selective red/blue flags
         only_red = ImageProcessor.remove_color_annotations(self.bgr_img, remove_red=True, remove_blue=False)
-        self.assertEqual(only_red[80, 120], 255)
+        self.assertEqual(only_red[80, 120], bg)
 
     def test_sharpen_and_padding(self):
         sharpened = ImageProcessor.sharpen(self.bgr_img)

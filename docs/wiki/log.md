@@ -4,6 +4,14 @@ Bu dosya, projedeki mimari kararların, kaynak içeri alımlarının (ingest), k
 
 ---
 
+## [2026-10-17] [FIX] | Gerçek Kullanıcı Testinde Bulunan 4 Hata Giderildi
+- **Overlay çökmesi:** `CanvasOverlayManager.clear()` silinmiş C++ öğelerinde `RuntimeError` fırlatıyordu; OCR sonrası ikinci OCR başlamıyor, yeni görsel "Görsel okunamadı" hatası veriyordu. `scene()` kontrolü ve `RuntimeError` yakalama eklendi.
+- **Deskew polarite:** `_estimate_skew_angle` koyu temalı görselde zemini satır sanıp -14°/-17° yanlış eğim uyguluyor ve Tesseract 0 karakter okuyordu (sample1/6: 0/5 -> 5/5). Metin maskesi polariteye göre çıkarılıyor; `deskew` kenar dolgusu arka plan renginden alınıyor. Aynı sınıf hata `remove_color_annotations` kalın çekirdek dolgusunda da (koyu zeminde beyaz leke) giderildi.
+- **Kutu koordinatları:** 2x büyütme, 16px pad ve ROI ofseti kutulara yansıtılmıyordu (kutular görsel dışına taşıyordu). `prepare_for_ocr_with_transform`, `restore_details_coordinates`, `shift_details_coordinates` ve `ImageCanvas.get_primary_region_offset` eklendi.
+- **multi_region:** Worker'a ilk bölgenin kırpımı veriliyordu, ikinci bölge kırpımın dışında kalıp kayboluyordu. Bu modda tam görsel verilir (`ImageCanvas.get_full_cv_image`).
+- Yeni testler: `tests/test_main_window_ocr_flow.py`, `tests/test_image_processor_polarity.py`, `test_ocr_engines.py` ve `test_overlay_manager.py` eklemeleri (67/67 başarılı, `verify.py` sıfır yeni bulgu).
+- Bilinen kalan risk (kod değişmedi): Varsayılan açık `CLAHE` filtresi Tesseract'ta şema görsellerinde metni siliyor (sample10: yalnız `contrast` -> 0 bölge); `binarize_adaptive` koyu/fotoğraflı arayüzlerde metni bozuyor.
+
 ## [2026-10-17] [FIX] | "Word Kaydet" Buton Metni Düzeltildi ve Dosya Kaydında Bölge Başlıkları Temizlendi
 - `UIStrings`: "Word (DOCX) Olarak Kaydet" metni sağ panel buton genişliğine sığmayıp "Word (DOCX) Olarak Kay" şeklinde kesiliyordu. Buton metinleri sadeleştirilerek `Word Kaydet`, `TXT Kaydet` ve `PDF Kaydet` olarak güncellendi.
 - `TextEditorPanel.strip_region_headers`: Dosyaya dışa aktarırken (`export_document`) `[1. Bölge]`, `[2. Seçili Bölge]` gibi dahili bölge etiketleri düzenli ifadeyle temizlenerek Word (.docx), TXT ve PDF dosyalarının temiz paragraf metinleri olarak kaydedilmesi sağlandı.

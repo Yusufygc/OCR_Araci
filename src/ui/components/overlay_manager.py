@@ -89,7 +89,12 @@ class CanvasOverlayManager(QObject):
         scene = self._canvas.scene()
         if scene:
             for item in self._items:
-                scene.removeItem(item)
+                try:
+                    if item.scene() is scene:
+                        scene.removeItem(item)
+                except RuntimeError:
+                    # QGraphicsScene.clear() (yeni görsel yüklenince) öğelerin C++ nesnesini zaten sildi.
+                    continue
         self._items.clear()
 
     def render_boxes(self, details: List[Dict[str, Any]]):

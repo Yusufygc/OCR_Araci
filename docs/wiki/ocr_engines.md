@@ -62,3 +62,6 @@ Akış şemaları, çok sütunlu makaleler ve yan yana kartlarda klasik satır k
 - **Düz Metin (Satır Satır) - `LineScanStrategy`:** Kitap, makale ve düz metinler için standart tek sütunlu satır taraması.
 - **Bölgesel / Şema (Blok Blok) - `BlockScanStrategy`:** Akış şemaları, tablolar, sunumlar ve kartlar için otomatik blok ayrıştırma.
 - **Seçili Alanlar (Çoklu Bölge) - `MultiRegionStrategy`:** Tuvalde kullanıcının Shift ile seçtiği çoklu ROI alanlarını sırayla tarayıp birleştirir.
+
+## Koordinat Sözleşmesi (`OCRResult.details`)
+- `details[i]["bbox"]` her zaman motora verilen **girdi görselinin** piksel uzayındadır. `prepare_for_ocr_with_transform` ile uygulanan 2x büyütme ve `16px` pad, motor içinde `ImageProcessor.restore_details_coordinates` ile geri alınır (`EasyOCREngine`, `TesseractEngine`). Kırpım ofseti çağıran katman (`MainWindow` / `MultiRegionStrategy`) tarafından eklenir. Bkz. [[image_processing]], [[ui_system]].

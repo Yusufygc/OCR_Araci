@@ -124,6 +124,17 @@ class ImageCanvas(QGraphicsView):
             return self._current_cv_image[y:y + h, x:x + w].copy()
         return self._current_cv_image.copy()
 
+    def get_full_cv_image(self) -> Optional[np.ndarray]:
+        """Returns a copy of the whole displayed OpenCV image, ignoring any ROI selection."""
+        if self._current_cv_image is None:
+            return None
+        return self._current_cv_image.copy()
+
+    def get_primary_region_offset(self) -> Tuple[int, int]:
+        """Returns top-left (x, y) of the first ROI used by get_cropped_cv_image(), or (0, 0) without ROI."""
+        regions = self.get_selected_regions()
+        return (regions[0][0], regions[0][1]) if regions else (0, 0)
+
     def clear_crop(self):
         """Clears all active crop selection overlays from canvas scene."""
         for item in self._crop_items:

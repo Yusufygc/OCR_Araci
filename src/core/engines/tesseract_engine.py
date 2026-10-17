@@ -134,7 +134,7 @@ class TesseractEngine(IOCREngine):
         start_time = time.time()
         try:
             cv_img = ImageProcessor.load_image(image)
-            prepared_img = ImageProcessor.prepare_for_ocr(cv_img)
+            prepared_img, scale, pad = ImageProcessor.prepare_for_ocr_with_transform(cv_img)
             gray = ImageProcessor.to_grayscale(prepared_img)
             pil_img = Image.fromarray(gray)
 
@@ -142,6 +142,7 @@ class TesseractEngine(IOCREngine):
                 pil_img, lang=lang, config=TESSERACT_CONFIG, output_type=pytesseract.Output.DICT
             )
             full_text, avg_conf, details = self._parse_tesseract_data(data)
+            details = ImageProcessor.restore_details_coordinates(details, scale, pad)
             elapsed = time.time() - start_time
 
             return OCRResult(

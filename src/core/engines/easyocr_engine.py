@@ -145,7 +145,7 @@ class EasyOCREngine(IOCREngine):
         start_time = time.time()
         try:
             cv_img = ImageProcessor.load_image(image)
-            prepared_img = ImageProcessor.prepare_for_ocr(cv_img)
+            prepared_img, scale, pad = ImageProcessor.prepare_for_ocr_with_transform(cv_img)
             langs = self._parse_languages(lang)
             reader = self._get_reader(langs)
             results = reader.readtext(
@@ -158,6 +158,7 @@ class EasyOCREngine(IOCREngine):
             )
 
             full_text, avg_conf, details = self._format_ocr_results(results)
+            details = ImageProcessor.restore_details_coordinates(details, scale, pad)
             elapsed = time.time() - start_time
 
             return OCRResult(

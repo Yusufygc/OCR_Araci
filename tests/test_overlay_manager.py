@@ -34,6 +34,19 @@ class TestOverlayManager(unittest.TestCase):
         self.overlay.clear()
         self.assertEqual(len(self.overlay._items), 0)
 
+    def test_clear_after_scene_cleared_does_not_raise(self):
+        """Yeni görsel yüklenince scene.clear() öğeleri siler; sonraki clear() çökmemeli."""
+        import numpy as np
+        self.canvas.set_cv_image(np.full((60, 120, 3), 255, dtype=np.uint8))
+        self.overlay.render_boxes([
+            {"text": "A", "confidence": 0.9, "bbox": [[5, 5], [30, 5], [30, 20], [5, 20]]}
+        ])
+        self.assertEqual(len(self.overlay._items), 1)
+
+        self.canvas.set_cv_image(np.full((60, 120, 3), 200, dtype=np.uint8))
+        self.overlay.clear()
+        self.assertEqual(len(self.overlay._items), 0)
+
     def test_visibility_and_enabled(self):
         sample_details = [
             {
