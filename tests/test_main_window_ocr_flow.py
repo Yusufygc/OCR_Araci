@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import patch
 import numpy as np
+import tests.qt_support  # noqa: F401  (çıkışta Qt nesnelerini temizler)
 from PySide6.QtCore import QRectF
 from PySide6.QtWidgets import QApplication
 from src.core.interfaces.ocr_interface import IOCREngine, OCRResult
@@ -46,9 +47,18 @@ class TestMainWindowOcrFlow(unittest.TestCase):
         self.addCleanup(patcher.stop)
 
         self.win = MainWindow()
+        self.addCleanup(self._dispose_window)
         self.img = np.full((300, 600, 3), 255, dtype=np.uint8)
         self.win.canvas.set_cv_image(self.img)
         self.win.on_image_loaded(self.img)
+
+    def _dispose_window(self):
+        worker = self.win._ocr_worker
+        if worker is not None:
+            worker.wait(5000)
+        self.win.close()
+        self.win.deleteLater()
+        self.app.processEvents()
 
     def _add_roi(self, x, y, w, h):
         item = InteractiveCropRect(QRectF(x, y, w, h))

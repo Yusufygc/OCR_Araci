@@ -34,3 +34,9 @@ python build_installer.py            # kararlı exe + kurulum dosyası + .sha256
 | `.github/workflows/release.yml` | `v*` etiketi push | `windows-latest` | Etiket denetimi -> testler -> Inno kur -> `python build_installer.py` (özet kapısı dahil) -> `gh release create --verify-tag` |
 
 Windows'a özgü testler (`build_verify`, kayıt defteri) `winreg` / `subprocess` taklitleriyle yazıldığı için `test.yml` Linux'ta da geçer.
+
+### Linux CI'yı yerelde yeniden üretmek (Docker)
+
+`test.yml` hatalarını Windows'ta yeniden üretmek mümkün olmayabilir (ör. çıkışta Qt segfault'u yalnız Linux'ta çıktı). Docker Desktop açıkken: `python:3.10` konteynerinde aynı `apt-get install` paketleri, `pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu`, `pip install -r requirements.txt` ve `QT_QPA_PLATFORM=offscreen python -m unittest discover tests` çalıştırılır; **çıkış kodu** da denetlenir (testler geçse bile 139 olabilir).
+
+Qt testleri `tests/qt_support.py` modülünü içe aktarmalıdır: çıkışta pencereleri doğru sırayla temizler (aksi halde Linux'ta segfault).

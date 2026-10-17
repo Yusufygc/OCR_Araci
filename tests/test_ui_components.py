@@ -1,6 +1,7 @@
 import sys
 import unittest
 import numpy as np
+import tests.qt_support  # noqa: F401  (çıkışta Qt nesnelerini temizler)
 from PySide6.QtWidgets import QApplication
 from src.ui.components.text_editor import TextEditorPanel
 from src.ui.components.filter_panel import FilterPanel

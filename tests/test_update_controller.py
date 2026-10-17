@@ -3,6 +3,8 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+import tests.qt_support  # noqa: F401  (çıkışta Qt nesnelerini temizler)
+from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication, QMainWindow
 
 from src.ui.update_controller import UpdateController, UpdateSettings
@@ -52,7 +54,18 @@ class TestUpdateController(unittest.TestCase):
         self.addCleanup(self._tmp.cleanup)
         self.tmp = Path(self._tmp.name)
         self.window = QMainWindow()
+        self.addCleanup(self._dispose)
         self.revealed, self.opened, self.quit_calls = [], [], []
+
+    def _dispose(self):
+        for worker_name in ("_check_worker", "_download_worker"):
+            for controller in getattr(self, "_controllers", []):
+                worker = getattr(controller, worker_name, None)
+                if worker is not None:
+                    worker.wait(5000)
+        self.window.close()
+        self.window.deleteLater()
+        self.app.processEvents()
 
     def _controller(self, service, repo="a/b", current="1.0.0", retry_ms=10):
         settings = UpdateSettings(
@@ -62,13 +75,14 @@ class TestUpdateController(unittest.TestCase):
         )
         controller = UpdateController(self.window, service=service, settings=settings)
         controller.quit_requested.connect(lambda: self.quit_calls.append(1))
+        self._controllers = getattr(self, "_controllers", []) + [controller]
         return controller
 
     def _wait(self, condition, timeout_ms=3000):
         waited = 0
         while not condition() and waited < timeout_ms:
             self.app.processEvents()
-            self.app.thread().msleep(10)
+            QTest.qWait(10)
             waited += 10
         self.app.processEvents()
         self.assertTrue(condition(), "zaman aşımı")

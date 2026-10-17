@@ -1,4 +1,5 @@
 import unittest
+import tests.qt_support  # noqa: F401  (çıkışta Qt nesnelerini temizler)
 from PySide6.QtWidgets import QApplication
 from PySide6.QtGui import QIcon
 import sys

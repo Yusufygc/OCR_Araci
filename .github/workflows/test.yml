@@ -31,5 +31,6 @@ jobs:
     - name: Run unit tests
       env:
         QT_QPA_PLATFORM: offscreen
+        PYTHONFAULTHANDLER: "1"
       run: |
         python -m unittest discover tests

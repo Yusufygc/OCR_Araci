@@ -4,6 +4,12 @@ Bu dosya, projedeki mimari kararların, kaynak içeri alımlarının (ingest), k
 
 ---
 
+## [2026-10-17] [FIX] | CI'da Testler Geçtikten Sonra Çıkışta Qt Segfault'u (exit 139)
+- **Belirti:** `test.yml` (ubuntu) 139 testi geçiyor, ardından `QObject: shared QObject was deleted directly` ve `Segmentation fault` ile çıkış kodu 139 veriyor; adım kırmızı.
+- **Yeniden üretim:** Docker Desktop (`python:3.10`, aynı apt paketleri, CPU torch) ile `test.yml` adımları taklit edildi. Commit'li hâl (`b46ed52`): 139 test OK, **çıkış kodu 139**, aynı hata iletisi. Düzeltmeli hâl: 139 test OK, **çıkış kodu 0** (son kod ile 2 art arda koşum).
+- **Düzeltme:** `tests/qt_support.py`: içe aktarıldığında `atexit` kancası kaydeder; açık üst düzey pencereleri kapatıp siler, bekleyen silme olaylarını işler (yorumlayıcı kapanışında Qt nesnelerinin QApplication'dan sonra rastgele sırayla silinmesini önler). Qt kullanan 5 test modülü bunu içe aktarır. `test_update_controller` içinde ana iş parçacığı sarmalayıcısı (`app.thread().msleep`) `QTest.qWait` ile değişti (`verify.py` testte `sleep`'i yasaklar), test sonlarında iş parçacıkları beklenip pencereler siliniyor (`test_update_controller`, `test_main_window_ocr_flow`). CI'a `PYTHONFAULTHANDLER=1` eklendi (çökme olursa Python izi görünür).
+- **Not:** Hangi parçanın tek başına yeterli olduğu ayrıştırılmadı; üçü birlikte doğrulandı. Düzeltme Linux konteynerinde 2 koşumla doğrulandı (çıkış segfault'u zamanlamaya bağlı olabilir); GitHub Actions'ta ilk push'ta tekrar bakılmalı.
+
 ## [2026-10-17] [FIX] | Ad Değişikliği (OCR Aracı), Donmuş Exe torchvision Hatası, CI Hataları ve Tanıtım README'si
 - **Ad:** "Kusursuz" kaldırıldı. Uygulama adı `OCR Aracı`, exe `OCRAraci.exe`, kurulum dosyası `OCRAraci-Setup-X.Y.Z.exe`, Inno betiği `packaging/OCRAraci.iss`, tercih klasörü `~/.ocraraci`, ortam değişkenleri `OCRARACI_NO_UPDATE_CHECK` / `OCRARACI_SELFTEST_OUT`. Kod, testler ve wiki buna göre güncellendi. Inno betiğine UTF-8 BOM eklendi (BOM'suz betik ANSI sayılır, Türkçe metinler bozulur).
 - **Donmuş exe hatası** (`operator torchvision::nms does not exist`, uygulama açılışta çöküyordu): torchvision'ın `_C_stable.pyd` ve `image_stable.pyd` uzantı modüllerini PyInstaller toplamıyordu (`--collect-binaries` yalnız DLL toplar). `build_exe.torchvision_extension_arguments()` her `.pyd`/`.so` için `--add-binary` ekler. Önceki "8 sn açık kaldı" denemesi bu hatayı yakalayamadı: hata penceresi de süreci açık tutar.
