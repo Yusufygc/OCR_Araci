@@ -4,6 +4,14 @@ Bu dosya, projedeki mimari kararların, kaynak içeri alımlarının (ingest), k
 
 ---
 
+## [2026-10-17] [FEAT] | Bölgesel ve Blok Tabanlı Tarama, Tak-Çıkar Strateji Deseni ve Tıklanabilir Kutu Katmanı Eklendi
+- `src/core/layout/`: `ILayoutAnalyzer` ve `XYCutLayoutAnalyzer` 2D uzamsal boşluk analizi ve hiyerarşik okuma sırası düzenleyicisi kuruldu. Akış şemaları ve çok sütunlu infografiklerde paralel blokların yatayda birbirine karışması (`Fiyat Duygu Risk Portföy / Tahmini Analizi Profili Optimizasyonu`) çözüldü; her blok `[1. Bölge: Finansal Veriler]`, `[4. Bölge: Fiyat Tahmini]`, `[5. Bölge: Duygu Analizi]` şeklinde yapısal olarak ayrıştırıldı.
+- `src/core/strategies/`: `IScanStrategy` sözleşmesi ve `ScanStrategyFactory` tak-çıkar fabrika mimarisi kuruldu. Kod bağımlılığı olmadan modlar eklenebilir: `LineScanStrategy` (Düz metin / satır satır), `BlockScanStrategy` (Bölgesel / şema blokları) ve `MultiRegionStrategy` (Seçili alanlar).
+- `src/ui/components/overlay_manager.py`: `CanvasOverlayManager` ve `ClickableBoxItem`. `ImageCanvas` mantığından bağımsız çalışan katman; tespit edilen metin kutularını yarı şeffaf yeşil çerçevelerle çizer, fare üzerine gelince hover vurgusu yapar ve tıklandığında metni işletim sistemi panosuna kopyalar.
+- `src/ui/components/image_canvas.py`: Çoklu seçim desteği (`_crop_items`), Shift + Sol tık ile çoklu ROI ekleme, sağ tık ile temizleme ve overlay kutularına tıklama önceliği sağlandı.
+- `src/ui/main_window.py`: Üst çubuğa `cmb_scan_mode` (Tarama modu seçici) ve alt kontrol alanına `chk_overlay` ("Metin Kutularını Göster" aç/kapa) eklendi.
+- Birim Testler ve Doğrulama: `test_layout_analyzer.py`, `test_scan_strategies.py` ve `test_overlay_manager.py` eklenerek test sayısı 55'e çıkarıldı (55/55 başarılı). `verify.py` sıfır yeni bulgu ile doğrulandı. `REAL_TEST` 10 senaryo x 2 motor = 20 OCR koşumuna genişletildi (`REPORT.md` güncellendi).
+
 ## [2026-10-17] [REFACTOR] | Sürgülü Ekran Ayracı (QSplitter) Kaldırıldı, Simetrik 1:1 Düzen Kuruldu
 - `MainWindow.init_ui`: İki panel arasındaki sürüklenebilir `QSplitter` ve sürgü/tutamak kaldırıldı.
 - `QHBoxLayout`: Sol panel (resim önizleme, filtreler, OCR çalıştırma) `stretch=1` ve sağ panel (çıktı metin editörü) `stretch=1` olarak yerleştirilerek ekranın tam ortasından %50 - %50 simetrik olarak ikiye bölünmesi sağlandı.

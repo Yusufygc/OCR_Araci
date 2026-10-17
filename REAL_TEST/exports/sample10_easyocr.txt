@@ -1,0 +1,32 @@
+[1. Bölge]
+Finansal
+Veriler
+Ita
+
+[2. Bölge]
+Haberler &
+Sosyal Medya
+
+[3. Bölge]
+MAKİNE
+ÖGRENMEsi
+
+[4. Bölge]
+Fiyat
+Tahmnini
+
+[5. Bölge]
+Duygu
+Analizi
+
+[6. Bölge]
+Ris <
+Profli
+
+[7. Bölge]
+Portföy
+Oplimizzsyonu
+
+[8. Bölge]
+YATIRIM
+DANISMANI

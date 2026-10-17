@@ -17,14 +17,17 @@ Uygulama 4 temel katmana ayrılmıştır:
 
 2. **Arayüz Katmanı (`src/ui/`):**
    - **`MainWindow` (`main_window.py`):** Ana pencere orkestratörü. Sol panel (tuval ve filtre kontrolleri) ile sağ panel (metin editörü) arasındaki senkronizasyonu yönetir.
-   - **`ImageCanvas` (`components/image_canvas.py`):** `QGraphicsView` tabanlı, akıcı zoom, pan ve etkileşimli ROI (`InteractiveCropRect`) kırpma alanı sunan görüntüleme bileşeni.
+   - **`ImageCanvas` (`components/image_canvas.py`):** `QGraphicsView` tabanlı, akıcı zoom, pan ve çoklu etkileşimli ROI (`InteractiveCropRect`) kırpma alanı sunan görüntüleme bileşeni.
+   - **`CanvasOverlayManager` (`components/overlay_manager.py`):** Tak-çıkar (pluggable) görsel katman yöneticisi. Tuval üzerine tespit edilen metin kutularını (`ClickableBoxItem`) yeşil yarı şeffaf çerçevelerle çizer, hover vurgusu ve tek tıkla panoya kopyalama sağlar.
    - **`FilterPanel` (`components/filter_panel.py`):** OpenCV önişleme filtre seçeneklerini sunar ve durum değişimlerini `filters_changed` sinyaliyle iletir.
    - **`TextEditorPanel` (`components/text_editor.py`):** OCR çıktılarını gösteren, anlık kelime/karakter istatistikleri tutan ve çoklu dışa aktarım butonlarını barındıran metin paneli.
-   - **`OCRWorkerThread` (`workers/ocr_worker.py`):** Ağır OCR tanıma işlemlerini arayüzü dondurmadan arka planda çalıştıran asenkron `QThread` işçisi.
+   - **`OCRWorkerThread` (`workers/ocr_worker.py`):** Ağır OCR tanıma ve strateji yürütme işlemlerini arayüzü dondurmadan arka planda çalıştıran asenkron `QThread` işçisi.
 
 3. **İş Mantığı ve Bilgisayarlı Görü Katmanı (`src/core/`):**
-   - **[[image_processing]]:** Görüntü yükleme, dönüştürme, gürültü temizleme ve açı düzeltme statik boru hattı.
-   - **[[ocr_engines]]:** OCR motorlarını strateji ve fabrika desenleriyle yöneten çekirdek.
+   - **[[image_processing]]:** Görüntü yükleme, dönüştürme, gürültü temizleme, renkli not silme ve açı düzeltme statik boru hattı.
+   - **[[ocr_engines]]:** OCR motorlarını strateji ve fabrika desenleriyle yöneten çekirdek (`IOCREngine`, `OCREngineFactory`).
+   - **Bölgesel Düzen Analizi (`src/core/layout/`):** `ILayoutAnalyzer` ve `XYCutLayoutAnalyzer`. Kelime kutuları arasındaki yatay/dikey boşlukları (gutters) inceleyerek sütunları, akış şemalarını ve bağımsız kartları hiyerarşik okuma sırasına (Reading Order) göre bloklara ayırır.
+   - **Tak-Çıkar Tarama Stratejileri (`src/core/strategies/`):** `IScanStrategy` arayüzü ve `ScanStrategyFactory`. `LineScanStrategy` (Düz metin / satır satır), `BlockScanStrategy` (Bölgesel / şema blokları), `MultiRegionStrategy` (Kullanıcı tanımlı çoklu alanlar).
 
 4. **Yardımcı Servisler ve Dışa Aktarıcılar (`src/utils/`):**
    - **[[exporters]]:** TXT, Word (.docx) ve PDF formatlarında belge üretim stratejileri.
@@ -35,10 +38,12 @@ Uygulama 4 temel katmana ayrılmıştır:
 
 ### Strateji Deseni (Strategy Pattern)
 - `IOCREngine` ([[ocr_engines]]): Tüm OCR sağlayıcıları (`EasyOCREngine`, `TesseractEngine`) bu soyut taban sınıfı uygular.
+- `IScanStrategy`: Tarama mantıkları (`LineScanStrategy`, `BlockScanStrategy`, `MultiRegionStrategy`) tak-çıkar modüller olarak işletilir.
 - `IDocumentExporter` ([[exporters]]): Belge çıktı formatları (`TxtExporter`, `DocxExporter`, `PdfExporter`) tek arayüz üzerinden işletilir.
 
 ### Fabrika Deseni (Factory Pattern)
 - `OCREngineFactory`: Motor adından (`"easyocr"`, `"tesseract"`) bağımsız örnek üretir.
+- `ScanStrategyFactory`: Tarama modundan (`"line"`, `"block"`, `"multi_region"`) bağımsız strateji sağlar.
 - `ExporterFactory`: Format uzantısından (`"txt"`, `"docx"`, `"pdf"`) uygun dışa aktarıcıyı döndürür.
 
 ---

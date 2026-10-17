@@ -66,4 +66,17 @@ btn_reset.setIcon(IconProvider.get_icon(IconType.RESET_FILTERS))
   - Sol panel (Resim önizleme, filtreler ve OCR kontrolleri) `stretch=1`, sağ panel (Ayrıştırılan metin çıktısı ve dışa aktarım butonları) `stretch=1` olarak yerleştirilmiştir.
   - Böylece arayüz ekranın tam ortasından simetrik (%50 sol, %50 sağ) olarak ikiye bölünmüş, kaydırma/sürgü aracı olmadan sabit ve dengeli bir görünüm elde edilmiştir.
 
+---
+
+## 6. Tak-Çıkar Tuval Katmanı ve Tıklanabilir Kutu Panoya Kopyalama (`CanvasOverlayManager`)
+
+- **Dosya:** `src/ui/components/overlay_manager.py`
+- **Tasarım:** Tak-Çıkar (Loosely Coupled) Overlay Mimarisi. `ImageCanvas` çekirdek mantığına dokunmadan `QGraphicsScene` üzerine dinamik etkileşim katmanı ekler.
+- **Yetenekler:**
+  - **Tıklanabilir Kutu (`ClickableBoxItem`):** OCR sonucu dönen her kelime/blok kutusu yarı şeffaf yeşil renkle vurgulanır.
+  - **Hover Glow:** Fare kutu üzerine geldiğinde çerçeve beyaz parlamaya dönüşür ve metin ile güven skorunu gösteren tooltip açılır.
+  - **Tıkla-Kopyala (Click-to-Copy):** Kutuya sol tıklandığında içindeki metin anında işletim sistemi panosuna (`QGuiApplication.clipboard()`) kopyalanır ve alt durum çubuğunda bildirim gösterilir.
+  - **Görünürlük Kontrolü (`chk_overlay`):** Kullanıcı "Metin Kutularını Göster" onay kutusu ile kutu katmanını istediği an açıp kapatabilir.
+  - **Çoklu ROI Alanı Seçimi:** Tuval üzerinde Shift tuşuna basılı tutularak birden fazla alan seçilebilir, sağ tıklandığında seçimler temizlenir.
+
 

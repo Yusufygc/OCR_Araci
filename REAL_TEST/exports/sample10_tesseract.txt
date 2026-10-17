@@ -1,0 +1,36 @@
+[1. Bölge]
+Finansal
+Veriler
+
+[2. Bölge]
+Haberler
+Sosyal Medya
+
+[3. Bölge]
+MAKINE
+ÖĞRENMESİ
+
+[4. Bölge]
+Fiyat
+Tahmini
+
+[5. Bölge]
+Duygu
+Analizi
+
+[6. Bölge]
+|
+
+[7. Bölge]
+Risk
+Profil
+©Ö
+
+[8. Bölge]
+Portföy
+Opümizasyonu|
+Bd
+
+[9. Bölge]
+YATIRIM
+DANIŞMANI

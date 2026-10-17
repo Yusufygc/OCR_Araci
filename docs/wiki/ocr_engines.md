@@ -45,3 +45,20 @@ class OCRResult:
 - **Dosya:** `src/core/factories/ocr_factory.py`
 - **Singleton / Instance Caching (`_instances`):** `get_engine(key)` çağrıldığında oluşturulan motor nesnesi `_instances` sözlüğünde önbelleğe alınır. Böylece her OCR işleminde PyTorch model ağırlıklarının diskten RAM'e tekrar yüklenmesi engellenir.
 - **Dinamik Kayıt:** `register_engine(key, engine_cls)` metodu sayesinde yeni motorlar runtime'da sisteme eklenebilir ve ilgili önbellek otomatik yenilenir.
+
+---
+
+## 4. Tarama Stratejileri ve Bölgesel Düzen Analizi (`IScanStrategy` & `XYCutLayoutAnalyzer`)
+
+Akış şemaları, çok sütunlu makaleler ve yan yana kartlarda klasik satır kümeleme algoritmaları aynı yatay eksendeki ($Y$ koordinatı) bağımsız metinleri birbirine karıştırır (`"Fiyat Duygu Risk Portföy / Tahmini Analizi Profili Optimizasyonu"`). Bunu çözmek için tak-çıkar strateji mimarisi eklenmiştir:
+
+### 4.1 XY-Cut ve 2B Uzamsal Blok Analizi (`XYCutLayoutAnalyzer`)
+- **Dosya:** `src/core/layout/xy_cut_analyzer.py`
+- Bounding box'lar arasındaki dikey (`SAME_LINE_V_OVERLAP_RATIO = 0.45`) ve yatay boşlukları (`SAME_COL_H_OVERLAP_RATIO = 0.40`, `SAME_COL_MAX_V_GAP_RATIO = 0.90`) tarar.
+- Komşuluk grafiği (`_build_adjacency_graph`) ve BFS bileşen dolaşımı (`_traverse_component`) ile bağımsız kartları/sütunları ayrı görsel kümelere ayırır.
+- Kümeleri satır bazlı kuantize $Y$ seviyesi ve $X$ koordinatına göre doğal hiyerarşik okuma sırasına (Reading Order) dizer (`[1. Bölge]`, `[2. Bölge]`, ...).
+
+### 4.2 Tak-Çıkar Tarama Modları (`ScanStrategyFactory`)
+- **Düz Metin (Satır Satır) - `LineScanStrategy`:** Kitap, makale ve düz metinler için standart tek sütunlu satır taraması.
+- **Bölgesel / Şema (Blok Blok) - `BlockScanStrategy`:** Akış şemaları, tablolar, sunumlar ve kartlar için otomatik blok ayrıştırma.
+- **Seçili Alanlar (Çoklu Bölge) - `MultiRegionStrategy`:** Tuvalde kullanıcının Shift ile seçtiği çoklu ROI alanlarını sırayla tarayıp birleştirir.

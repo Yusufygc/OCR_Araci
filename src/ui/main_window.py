@@ -3,28 +3,34 @@ from typing import Optional
 import numpy as np
 from PySide6.QtWidgets import (
     QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, 
-    QPushButton, QComboBox, QLabel, QFileDialog, 
+    QPushButton, QComboBox, QCheckBox, QLabel, QFileDialog, 
     QProgressBar, QMessageBox, QApplication
 )
 
 from src.ui.components.image_canvas import ImageCanvas
 from src.ui.components.filter_panel import FilterPanel
 from src.ui.components.text_editor import TextEditorPanel
+from src.ui.components.overlay_manager import CanvasOverlayManager
 from src.ui.workers.ocr_worker import OCRWorkerThread
 from src.core.processing.image_processor import ImageProcessor
 from src.core.factories.ocr_factory import OCREngineFactory
+from src.core.strategies.scan_factory import ScanStrategyFactory
 from src.core.interfaces.ocr_interface import OCRResult
 from src.ui.strings import UIStrings
 from src.ui.icons import IconProvider, IconType
 
 DEFAULT_WINDOW_WIDTH = 1295
 DEFAULT_WINDOW_HEIGHT = 800
-ENGINE_COMBO_MIN_WIDTH = 210
-LANG_COMBO_MIN_WIDTH = 160
-TOP_BAR_SPACING = 8
-SECTION_SPACING = 12
+ENGINE_COMBO_MIN_WIDTH = 135
+SCAN_MODE_COMBO_MIN_WIDTH = 135
+LANG_COMBO_MIN_WIDTH = 95
+TOP_BAR_SPACING = 6
+SECTION_SPACING = 8
 WINDOW_MARGIN = 10
 THREAD_WAIT_TIMEOUT_MS = 1500
+STATUS_SNIPPET_MAX_LEN = 30
+STATUS_MSG_TIMEOUT_MS = 3000
+
 
 
 class MainWindow(QMainWindow):
@@ -76,8 +82,6 @@ class MainWindow(QMainWindow):
         btn_open.clicked.connect(self.open_image_dialog)
         top_bar.addWidget(btn_open)
 
-        top_bar.addSpacing(SECTION_SPACING)
-
         lbl_engine = QLabel(UIStrings.LBL_ENGINE)
         top_bar.addWidget(lbl_engine)
 
@@ -87,7 +91,14 @@ class MainWindow(QMainWindow):
         self._populate_engine_combo()
         top_bar.addWidget(self.cmb_engine)
 
-        top_bar.addSpacing(SECTION_SPACING)
+        lbl_scan_mode = QLabel(UIStrings.LBL_SCAN_MODE)
+        top_bar.addWidget(lbl_scan_mode)
+
+        self.cmb_scan_mode = QComboBox()
+        self.cmb_scan_mode.setMinimumWidth(SCAN_MODE_COMBO_MIN_WIDTH)
+        self.cmb_scan_mode.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
+        self._populate_scan_modes()
+        top_bar.addWidget(self.cmb_scan_mode)
 
         lbl_lang = QLabel(UIStrings.LBL_LANGUAGE)
         top_bar.addWidget(lbl_lang)
@@ -114,6 +125,11 @@ class MainWindow(QMainWindow):
         self.btn_run_ocr.setObjectName("btn_primary")
         self.btn_run_ocr.clicked.connect(self.start_ocr_process)
         ocr_action_box.addWidget(self.btn_run_ocr)
+
+        self.chk_overlay = QCheckBox(UIStrings.CHK_SHOW_OVERLAY)
+        self.chk_overlay.setChecked(True)
+        self.chk_overlay.toggled.connect(self.on_overlay_toggled)
+        ocr_action_box.addWidget(self.chk_overlay)
 
         self.progress_bar = QProgressBar()
         self.progress_bar.setRange(0, 0)
@@ -148,13 +164,16 @@ class MainWindow(QMainWindow):
         main_layout.setContentsMargins(WINDOW_MARGIN, WINDOW_MARGIN, WINDOW_MARGIN, WINDOW_MARGIN)
         main_layout.setSpacing(SECTION_SPACING)
 
-        # Sol taraf: Resim önizleme ve araçlar (Simetrik %50)
+        # Sol taraf: Resim onizleme ve araclar (Simetrik %50)
         left_panel = self._build_left_panel()
         main_layout.addWidget(left_panel, stretch=1)
 
-        # Sağ taraf: Çıktı metin editörü (Simetrik %50)
+        # Sag taraf: Cikti metin editoru (Simetrik %50)
         self.text_editor = TextEditorPanel()
         main_layout.addWidget(self.text_editor, stretch=1)
+
+        self.overlay_manager = CanvasOverlayManager(self.canvas)
+        self.overlay_manager.box_clicked.connect(self.on_box_clicked)
 
         self.statusBar().showMessage(UIStrings.STATUS_BAR_READY)
 
@@ -167,6 +186,22 @@ class MainWindow(QMainWindow):
                 name += " (Kütüphane eksik)"
             self.cmb_engine.addItem(name, eng["id"])
 
+    def _populate_scan_modes(self):
+        self.cmb_scan_mode.clear()
+        for mode in ScanStrategyFactory.list_strategies():
+            self.cmb_scan_mode.addItem(mode["name"], mode["id"])
+        idx = self.cmb_scan_mode.findData("block")
+        if idx >= 0:
+            self.cmb_scan_mode.setCurrentIndex(idx)
+
+    def on_overlay_toggled(self, checked: bool):
+        self.overlay_manager.set_enabled(checked)
+
+    def on_box_clicked(self, text: str):
+        suffix = "..." if len(text) > STATUS_SNIPPET_MAX_LEN else ""
+        snippet = text[:STATUS_SNIPPET_MAX_LEN] + suffix
+        self.statusBar().showMessage(UIStrings.STATUS_BOX_COPIED.format(text=snippet), STATUS_MSG_TIMEOUT_MS)
+
     def open_image_dialog(self):
         file_path, _ = QFileDialog.getOpenFileName(
             self, UIStrings.DIALOG_OPEN_IMAGE, "", UIStrings.FILTER_IMAGE_FILES
@@ -176,6 +211,7 @@ class MainWindow(QMainWindow):
                 img = ImageProcessor.load_image(file_path)
                 self._raw_image = img
                 self.canvas.set_cv_image(img)
+                self.overlay_manager.clear()
                 self.apply_image_filters()
                 self.lbl_status.setText(UIStrings.STATUS_LOADED.format(filename=os.path.basename(file_path)))
             except Exception as e:
@@ -183,6 +219,7 @@ class MainWindow(QMainWindow):
 
     def on_image_loaded(self, cv_img: np.ndarray):
         self._raw_image = cv_img
+        self.overlay_manager.clear()
         self.apply_image_filters()
         self.lbl_status.setText(UIStrings.STATUS_DRAG_DROPPED)
 
@@ -194,32 +231,40 @@ class MainWindow(QMainWindow):
         settings = self.filter_panel.get_filter_settings()
         img = self._raw_image.copy()
 
-        # 1. Color Mask / Remove Annotations (requires BGR channels)
         if settings["remove_color"]:
             img = ImageProcessor.remove_color_annotations(img)
-
-        # 2. Deskew (geometric alignment before pixel intensity filters)
         if settings["deskew"]:
             img = ImageProcessor.deskew(img)
-
-        # 3. Denoise
         if settings["denoise"]:
             img = ImageProcessor.denoise(img)
-
-        # 4. Contrast (CLAHE)
         if settings["contrast"]:
             img = ImageProcessor.enhance_contrast(img)
-
-        # 5. Grayscale
         if settings["grayscale"]:
             img = ImageProcessor.to_grayscale(img)
-
-        # 6. Adaptive Threshold / Binarization
         if settings["threshold"]:
             img = ImageProcessor.binarize_adaptive(img)
 
         self._processed_image = img
         self.canvas.set_cv_image(img, reset_crop=False)
+        if hasattr(self, "overlay_manager"):
+            self.overlay_manager.clear()
+
+    def _resolve_ocr_engine(self, engine_key: str):
+        try:
+            ocr_engine = OCREngineFactory.get_engine(engine_key)
+            if not ocr_engine.is_available:
+                QMessageBox.critical(self, "Hata", UIStrings.MSG_ENGINE_NOT_AVAILABLE.format(engine_name=ocr_engine.name))
+                return None
+            return ocr_engine
+        except Exception as e:
+            QMessageBox.critical(self, "Hata", UIStrings.MSG_ENGINE_CREATE_ERROR.format(error=str(e)))
+            return None
+
+    def _resolve_scan_strategy(self, mode_id: str):
+        strategy = ScanStrategyFactory.get_strategy(mode_id)
+        if mode_id == "multi_region" and hasattr(strategy, "set_regions"):
+            strategy.set_regions(self.canvas.get_selected_regions())
+        return strategy
 
     def start_ocr_process(self):
         """Launches non-blocking OCR worker thread."""
@@ -228,25 +273,19 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "Uyarı", UIStrings.MSG_NO_IMAGE_BODY)
             return
 
-        engine_key = self.cmb_engine.currentData()
-        lang_code = self.cmb_lang.currentData()
-
-        try:
-            ocr_engine = OCREngineFactory.get_engine(engine_key)
-            if not ocr_engine.is_available:
-                QMessageBox.critical(self, "Hata", UIStrings.MSG_ENGINE_NOT_AVAILABLE.format(engine_name=ocr_engine.name))
-                return
-        except Exception as e:
-            QMessageBox.critical(self, "Hata", UIStrings.MSG_ENGINE_CREATE_ERROR.format(error=str(e)))
+        ocr_engine = self._resolve_ocr_engine(self.cmb_engine.currentData())
+        if ocr_engine is None:
             return
 
-        # Disable button & show progress
+        strategy = self._resolve_scan_strategy(self.cmb_scan_mode.currentData())
+        self.overlay_manager.clear()
         self.btn_run_ocr.setEnabled(False)
         self.progress_bar.setVisible(True)
         self.lbl_status.setText(UIStrings.STATUS_PROCESSING)
 
-        # Launch Thread
-        self._ocr_worker = OCRWorkerThread(ocr_engine, target_image, lang=lang_code)
+        self._ocr_worker = OCRWorkerThread(
+            ocr_engine, target_image, lang=self.cmb_lang.currentData(), strategy=strategy
+        )
         self._ocr_worker.result_ready.connect(self.on_ocr_success)
         self._ocr_worker.error_occurred.connect(self.on_ocr_error)
         self._ocr_worker.start()
@@ -257,6 +296,7 @@ class MainWindow(QMainWindow):
 
         if result.success:
             self.text_editor.set_text(result.text)
+            self.overlay_manager.render_boxes(result.details)
             self.lbl_status.setText(UIStrings.STATUS_SUCCESS.format(time=result.processing_time, confidence=result.confidence*100))
             self.statusBar().showMessage(UIStrings.STATUS_BAR_SUCCESS.format(time=result.processing_time))
         else:
@@ -274,5 +314,6 @@ class MainWindow(QMainWindow):
         if self._ocr_worker and self._ocr_worker.isRunning():
             self._ocr_worker.requestInterruption()
             self._ocr_worker.quit()
-            self._ocr_worker.wait(1500)
+            self._ocr_worker.wait(THREAD_WAIT_TIMEOUT_MS)
         event.accept()
+

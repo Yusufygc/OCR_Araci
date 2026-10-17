@@ -120,6 +120,13 @@ TEST_DATA = [
         "pipeline": "clean_paint_and_deskew",
         "ground_truth_keywords": ["Acik Kaynak", "Bilgisayarli goru", "derin ogrenme", "Hough donusumu", "Telea inpainting"]
     },
+    {
+        "id": "sample10",
+        "filename": "sample10_diagram_clean.png",
+        "name": "Çok Sütunlu Finansal Makine Öğrenmesi Şeması ve Kartları (Bölgesel Tarama)",
+        "pipeline": "raw",
+        "ground_truth_keywords": ["Finansal Veriler", "Sosyal Medya", "Makine Öğrenmesi", "Fiyat Tahmini", "Duygu Analizi", "Risk Profili", "Portföy Optimizasyonu"]
+    },
 ]
 
 
@@ -212,8 +219,15 @@ def _export_formats(text: str, img_id: str, engine_key: str, exports_dir: str):
 def _evaluate_engine(engine_key: str, cv_img: np.ndarray, img_meta: dict, exports_dir: str):
     """Executes OCR with given engine, evaluates keywords, and triggers file export."""
     engine = OCREngineFactory.get_engine(engine_key)
-    result = engine.extract_text(cv_img, lang="tur+eng")
-    matched = [kw for kw in img_meta["ground_truth_keywords"] if kw.lower() in result.text.lower()]
+    if img_meta["id"] == "sample10":
+        from src.core.strategies.scan_factory import ScanStrategyFactory
+        strategy = ScanStrategyFactory.get_strategy("block")
+        result = strategy.execute(cv_img, engine, lang="tur+eng")
+    else:
+        result = engine.extract_text(cv_img, lang="tur+eng")
+
+    norm_text = " ".join(result.text.split()).lower()
+    matched = [kw for kw in img_meta["ground_truth_keywords"] if kw.lower() in norm_text]
     match_rate = f"{len(matched)}/{len(img_meta['ground_truth_keywords'])}"
 
     if result.text:
@@ -232,7 +246,7 @@ def _build_markdown_report(real_test_dir: str, summary_table: list, details: lis
         f"**Test Tarihi:** {time.strftime('%Y-%m-%d %H:%M:%S')}",
         f"**Test Klasörü:** `{real_test_dir}`\n",
         "---\n",
-        "### Test Özeti Tablosu (9 Senaryo x 2 Motor = 18 OCR Koşumu)\n" + "\n".join(summary_table) + "\n\n---\n"
+        "### Test Özeti Tablosu (10 Senaryo x 2 Motor = 20 OCR Koşumu)\n" + "\n".join(summary_table) + "\n\n---\n"
     ]
     lines.extend(details)
     report_path = os.path.join(real_test_dir, "REPORT.md")

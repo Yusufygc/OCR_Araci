@@ -11,7 +11,8 @@ class UIStrings:
 
     # Üst Kontrol Çubuğu
     BTN_OPEN_IMAGE = "Görsel Yükle"
-    LBL_ENGINE = "OCR Motoru:"
+    LBL_ENGINE = "Motor:"
+    LBL_SCAN_MODE = "Mod:"
     LBL_LANGUAGE = "Dil:"
     LANG_TUR_ENG = "Türkçe + İngilizce"
     LANG_TUR = "Türkçe"
@@ -23,12 +24,14 @@ class UIStrings:
     STATUS_DRAG_DROPPED = "Görsel tuvale aktarıldı."
     STATUS_PROCESSING = "Metinler ayrıştırılıyor... Lütfen bekleyin."
     STATUS_SUCCESS = "Tamamlandı! Süre: {time:.2f} sn | Doğruluk Oranı: %{confidence:.1f}"
+    STATUS_BOX_COPIED = "Kutu metni panoya kopyalandı: '{text}'"
     STATUS_ERROR = "İşlem sırasında hata oluştu."
     STATUS_FAILED = "İşlem başarısız."
     STATUS_BAR_SUCCESS = "OCR Başarılı - {time:.2f} saniye sürdü."
 
-    # OCR Butonu
+    # OCR Butonu ve Katman
     BTN_RUN_OCR = "Metni Ayrıştır"
+    CHK_SHOW_OVERLAY = "Metin Kutularını Göster"
 
     # Filtre Paneli
     GROUP_FILTERS = "Görüntü İyileştirme ve Temizleme Filtreleri"
