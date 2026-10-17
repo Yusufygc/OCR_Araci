@@ -87,7 +87,7 @@ btn_reset.setIcon(IconProvider.get_icon(IconType.RESET_FILTERS))
 - Testler: `tests/test_main_window_ocr_flow.py`, `tests/test_overlay_manager.py`. Bkz. [[ocr_engines]].
 
 ## 8. Yardım Menüsü ve Güncelleme Penceresi
-- `MainWindow` menü çubuğunda **Yardım**: `Sürüm X.Y.Z` (pasif), `Güncellemeleri Denetle`, `Açılışta Güncellemeyi Denetle` (işaretli kutu, `~/.kusursuzocr/updates.json`).
+- `MainWindow` menü çubuğunda **Yardım**: `Sürüm X.Y.Z` (pasif), `Güncellemeleri Denetle`, `Açılışta Güncellemeyi Denetle` (işaretli kutu, `~/.ocraraci/updates.json`).
 - `UpdateDialog` yalnızca görünümdür (indirme çubuğu, "Windows bekleniyor...", `Beklemeyi Bırak`, `Sürüm Sayfası`, `Bu Sürümü Atla`); mantık `UpdateController`'dadır. Tüm metinler `UIStrings` içindedir. Akış ve güvenlik: [[update_system]].
 
 ## 9. Uygulama İkonu

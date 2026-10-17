@@ -9,8 +9,8 @@ from src.ui.update_controller import UpdateController, UpdateSettings
 from src.utils.updater.update_service import InstallerBlockedError, UpdateError, UpdateInfo
 
 INFO = UpdateInfo(
-    version="1.2.0", tag="v1.2.0", installer_name="KusursuzOCR-Setup-1.2.0.exe",
-    download_url="https://github.com/a/b/releases/download/v1.2.0/KusursuzOCR-Setup-1.2.0.exe",
+    version="1.2.0", tag="v1.2.0", installer_name="OCRAraci-Setup-1.2.0.exe",
+    download_url="https://github.com/a/b/releases/download/v1.2.0/OCRAraci-Setup-1.2.0.exe",
     size=10, sha256="0" * 64, checksum_url=None, notes="Notlar", page_url="https://github.com/a/b/releases/tag/v1.2.0",
 )
 

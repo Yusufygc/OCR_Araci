@@ -29,14 +29,14 @@ class TestUpdatePrefs(unittest.TestCase):
     def test_disabled_by_env_or_empty_repo(self):
         with patch.object(update_prefs, "RELEASE_REPO", "sahip/depo"):
             self.assertFalse(update_prefs.is_update_check_disabled({}))
-            self.assertTrue(update_prefs.is_update_check_disabled({"KUSURSUZOCR_NO_UPDATE_CHECK": "1"}))
+            self.assertTrue(update_prefs.is_update_check_disabled({"OCRARACI_NO_UPDATE_CHECK": "1"}))
         with patch.object(update_prefs, "RELEASE_REPO", ""):
             self.assertTrue(update_prefs.is_update_check_disabled({}))
 
     def test_startup_check_only_when_frozen_and_enabled(self):
         prefs = UpdatePreferences(check_on_startup=True)
         with patch.object(update_prefs, "RELEASE_REPO", "sahip/depo"), patch.dict("os.environ", {}, clear=False):
-            with patch.dict("os.environ", {"KUSURSUZOCR_NO_UPDATE_CHECK": ""}):
+            with patch.dict("os.environ", {"OCRARACI_NO_UPDATE_CHECK": ""}):
                 self.assertTrue(update_prefs.should_check_on_startup(prefs, frozen=True))
                 self.assertFalse(update_prefs.should_check_on_startup(prefs, frozen=False))
                 self.assertFalse(update_prefs.should_check_on_startup(UpdatePreferences(check_on_startup=False), frozen=True))

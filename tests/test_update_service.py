@@ -26,7 +26,7 @@ class FakeResponse:
         return self._url
 
 
-def make_release(tag="v1.2.0", name="KusursuzOCR-Setup-1.2.0.exe", with_checksum=True, digest=None, **extra):
+def make_release(tag="v1.2.0", name="OCRAraci-Setup-1.2.0.exe", with_checksum=True, digest=None, **extra):
     assets = [{
         "name": name, "size": len(PAYLOAD), "browser_download_url": f"{BASE}/{name}",
         **({"digest": digest} if digest else {}),
@@ -39,8 +39,8 @@ def make_release(tag="v1.2.0", name="KusursuzOCR-Setup-1.2.0.exe", with_checksum
 
 def make_info(**overrides) -> UpdateInfo:
     fields = dict(
-        version="1.2.0", tag="v1.2.0", installer_name="KusursuzOCR-Setup-1.2.0.exe",
-        download_url=f"{BASE}/KusursuzOCR-Setup-1.2.0.exe", size=len(PAYLOAD), sha256=PAYLOAD_SHA,
+        version="1.2.0", tag="v1.2.0", installer_name="OCRAraci-Setup-1.2.0.exe",
+        download_url=f"{BASE}/OCRAraci-Setup-1.2.0.exe", size=len(PAYLOAD), sha256=PAYLOAD_SHA,
         checksum_url=None, notes="", page_url=f"https://github.com/{REPO}/releases/tag/v1.2.0",
     )
     fields.update(overrides)
@@ -57,7 +57,7 @@ class TestVersionAndRelease(unittest.TestCase):
     def test_newer_release_returns_info(self):
         info = svc.release_to_update(make_release(), "1.0.0", REPO)
         self.assertEqual(info.version, "1.2.0")
-        self.assertEqual(info.installer_name, "KusursuzOCR-Setup-1.2.0.exe")
+        self.assertEqual(info.installer_name, "OCRAraci-Setup-1.2.0.exe")
         self.assertTrue(info.checksum_url.endswith(".sha256"))
 
     def test_same_or_older_release_is_ignored(self):
@@ -72,10 +72,10 @@ class TestVersionAndRelease(unittest.TestCase):
     def test_wrong_asset_name_or_host_rejected(self):
         self.assertIsNone(svc.release_to_update(make_release(name="Baska-Setup-1.2.0.exe"), "1.0.0", REPO))
         evil = make_release()
-        evil["assets"][0]["browser_download_url"] = "https://evil.example.com/KusursuzOCR-Setup-1.2.0.exe"
+        evil["assets"][0]["browser_download_url"] = "https://evil.example.com/OCRAraci-Setup-1.2.0.exe"
         self.assertIsNone(svc.release_to_update(evil, "1.0.0", REPO))
         other_repo = make_release()
-        other_repo["assets"][0]["browser_download_url"] = "https://github.com/baska/depo/releases/download/v1.2.0/KusursuzOCR-Setup-1.2.0.exe"
+        other_repo["assets"][0]["browser_download_url"] = "https://github.com/baska/depo/releases/download/v1.2.0/OCRAraci-Setup-1.2.0.exe"
         self.assertIsNone(svc.release_to_update(other_repo, "1.0.0", REPO))
 
     def test_digest_field_is_used(self):
@@ -131,9 +131,9 @@ class TestResolveSha256(unittest.TestCase):
         self.assertEqual(svc.resolve_sha256(make_info()), PAYLOAD_SHA)
 
     def test_reads_checksum_file(self):
-        url = f"{BASE}/KusursuzOCR-Setup-1.2.0.exe.sha256"
+        url = f"{BASE}/OCRAraci-Setup-1.2.0.exe.sha256"
         info = make_info(sha256=None, checksum_url=url)
-        opener = lambda r, timeout=None: FakeResponse(f"{PAYLOAD_SHA.upper()} *KusursuzOCR-Setup-1.2.0.exe\n".encode(), url)
+        opener = lambda r, timeout=None: FakeResponse(f"{PAYLOAD_SHA.upper()} *OCRAraci-Setup-1.2.0.exe\n".encode(), url)
         self.assertEqual(svc.resolve_sha256(info, opener), PAYLOAD_SHA)
 
     def test_missing_digest_rejects_update(self):
@@ -179,7 +179,7 @@ class TestDownload(unittest.TestCase):
         for bad in (
             make_info(installer_name="..\\Evil.exe"),
             make_info(installer_name="Evil.exe"),
-            make_info(download_url="https://evil.example.com/KusursuzOCR-Setup-1.2.0.exe"),
+            make_info(download_url="https://evil.example.com/OCRAraci-Setup-1.2.0.exe"),
             make_info(size=svc.MAX_INSTALLER_BYTES + 1),
             make_info(size=0),
         ):
@@ -192,7 +192,7 @@ class TestDownload(unittest.TestCase):
 
 
 class TestLaunchInstaller(unittest.TestCase):
-    NAME = Path("KusursuzOCR-Setup-1.2.0.exe")
+    NAME = Path("OCRAraci-Setup-1.2.0.exe")
 
     def test_arguments_and_flags(self):
         captured = {}

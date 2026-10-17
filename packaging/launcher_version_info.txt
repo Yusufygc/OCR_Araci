@@ -16,11 +16,11 @@ VSVersionInfo(
     StringFileInfo([
       StringTable(
         '041F04B0',
-        [StringStruct('FileDescription', 'Kusursuz OCR'),
+        [StringStruct('FileDescription', 'OCR Araci'),
          StringStruct('FileVersion', '1.0.0.0'),
-         StringStruct('InternalName', 'KusursuzOCR'),
-         StringStruct('OriginalFilename', 'KusursuzOCR.exe'),
-         StringStruct('ProductName', 'Kusursuz OCR'),
+         StringStruct('InternalName', 'OCRAraci'),
+         StringStruct('OriginalFilename', 'OCRAraci.exe'),
+         StringStruct('ProductName', 'OCR Araci'),
          StringStruct('ProductVersion', '1.0.0.0')])
     ]),
     VarFileInfo([VarStruct('Translation', [1055, 1200])])

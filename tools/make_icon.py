@@ -1,5 +1,5 @@
 """
-Kusursuz OCR uygulama ikonunu üretir (Pillow ile, dış dosya gerekmez).
+OCR Aracı uygulama ikonunu üretir (Pillow ile, dış dosya gerekmez).
 
     python tools/make_icon.py
 

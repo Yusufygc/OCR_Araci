@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parent.parent
 # Bu özetler exe'ye giren dosyalarındır (satır sonları LF'ye çevrilerek). Değişirse kararlı exe değişir:
 # docs/wiki/exe_distribution.md "Exe'yi bilerek değiştirmek" adımlarını izlemeden güncelleme.
 LAUNCHER_SHA256 = "7c103a99453580fabbc8ba1f405b2e860cb8b4e0f44ee722dcf2106d44e35a21"
-VERSION_INFO_SHA256 = "ad9bd36d540c37ea6f383408c4baaa2d95bb95aa4a5fe203040543e9287e12a1"
+VERSION_INFO_SHA256 = "8031b63e989d9d5050f3bbbe9ee0f4c133ba2d518149798be506a5506c7af425"
 # Exe ikonu (binary, olduğu gibi) exe özetine girer; tools/make_icon.py ile yeniden üretmek özeti değiştirebilir.
 ICON_SHA256 = "56fd2c93e93ee1de54177ded6a64d6e498653d10126e32c7342f6d568f2cd71c"
 
@@ -44,11 +44,13 @@ class TestStableExeInputs(unittest.TestCase):
         self.assertEqual(hashlib.sha256(icon.read_bytes()).hexdigest(), ICON_SHA256,
                          "app_icon.ico değişti: kararlı exe özeti değişir (docs/wiki/exe_distribution.md)")
         from PIL import Image
-        sizes = Image.open(icon).info["sizes"]
+        with Image.open(icon) as icon_image:
+            sizes = icon_image.info["sizes"]
         for needed in ((16, 16), (32, 32), (48, 48), (256, 256)):
             self.assertIn(needed, sizes)
         window_icon = ROOT / "src" / "ui" / "assets" / "app_icon.png"
-        self.assertEqual(Image.open(window_icon).size, (256, 256))
+        with Image.open(window_icon) as window_image:
+            self.assertEqual(window_image.size, (256, 256))
 
     def test_pyinstaller_arguments_keep_exe_stable(self):
         args = build_exe.pyinstaller_arguments(ROOT)
@@ -59,6 +61,14 @@ class TestStableExeInputs(unittest.TestCase):
         self.assertNotIn("--onefile", args)
         self.assertTrue(any(a.startswith("--icon=") and a.endswith("app_icon.ico") for a in args))
         self.assertTrue(any(a.startswith("--add-data=") and a.endswith("src/ui/assets") for a in args))
+
+    def test_torchvision_extension_modules_are_added_explicitly(self):
+        args = build_exe.torchvision_extension_arguments()
+        self.assertTrue(args, "torchvision uzantı modülleri (.pyd/.so) bulunamadı")
+        self.assertTrue(all(a.startswith("--add-binary=") and a.endswith("torchvision") for a in args))
+        self.assertTrue(any("_C" in a for a in args))
+        for argument in args:
+            self.assertIn(argument, build_exe.pyinstaller_arguments(ROOT))
 
     def test_build_script_fixes_epoch(self):
         source = (ROOT / "build_exe.py").read_text(encoding="utf-8")
@@ -80,7 +90,7 @@ class TestLauncherHashGate(unittest.TestCase):
         self._tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self._tmp.cleanup)
         self.dir = Path(self._tmp.name)
-        self.exe = self.dir / "KusursuzOCR.exe"
+        self.exe = self.dir / "OCRAraci.exe"
         self.exe.write_bytes(b"exe-icerigi")
         self.hash_file = self.dir / "launcher.sha256"
 
@@ -102,12 +112,12 @@ class TestLauncherHashGate(unittest.TestCase):
     def test_committed_approval_file_format_if_present(self):
         approval = ROOT / "packaging" / "launcher.sha256"
         if approval.exists():
-            self.assertRegex(approval.read_text(encoding="ascii").strip(), r"^[0-9a-f]{64} \*KusursuzOCR\.exe$")
+            self.assertRegex(approval.read_text(encoding="ascii").strip(), r"^[0-9a-f]{64} \*OCRAraci\.exe$")
 
 
 class TestInstallerScript(unittest.TestCase):
     def setUp(self):
-        self.iss = (ROOT / "packaging" / "KusursuzOCR.iss").read_text(encoding="utf-8")
+        self.iss = (ROOT / "packaging" / "OCRAraci.iss").read_text(encoding="utf-8-sig")
 
     def test_inno_settings(self):
         self.assertIn("PrivilegesRequired=lowest", self.iss)
@@ -133,7 +143,7 @@ class TestInstallerScript(unittest.TestCase):
 
     def test_checksum_file_written_next_to_installer(self):
         with tempfile.TemporaryDirectory() as tmp:
-            installer = Path(tmp) / "KusursuzOCR-Setup-1.2.3.exe"
+            installer = Path(tmp) / "OCRAraci-Setup-1.2.3.exe"
             installer.write_bytes(b"veri")
             checksum = build_installer.write_checksum(installer)
             self.assertEqual(checksum.name, installer.name + ".sha256")

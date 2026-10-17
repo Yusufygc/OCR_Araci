@@ -5,7 +5,8 @@ __version__ = "1.0.0"
 # Güncelleme denetiminin bakacağı GitHub deposu ("sahip/depo"). Boşsa güncelleme denetimi kapalıdır.
 RELEASE_REPO = "Yusufygc/OCR_Araci"
 
-APP_NAME = "Kusursuz OCR"
-EXE_NAME = "KusursuzOCR"
-INSTALLER_PREFIX = "KusursuzOCR"
-UPDATE_ENV_DISABLE = "KUSURSUZOCR_NO_UPDATE_CHECK"
+APP_NAME = "OCR Aracı"
+EXE_NAME = "OCRAraci"
+INSTALLER_PREFIX = "OCRAraci"
+UPDATE_ENV_DISABLE = "OCRARACI_NO_UPDATE_CHECK"
+SELFTEST_OUT_ENV = "OCRARACI_SELFTEST_OUT"

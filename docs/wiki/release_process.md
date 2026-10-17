@@ -29,7 +29,7 @@ gh release view v1.0.1                # kurulum dosyası ve .sha256 oluştu mu
 1. Etiket ile `src/version.py` aynı değilse **durur** (`tools/release.py --check-tag`; etiket adı `env: TAG` ile verilir, betiğe gömülmez).
 2. Bağımlılıkları kurar (`requirements.txt`, `requirements-build.txt`), `python -m unittest discover tests` koşar; kırmızıysa yayın yok.
 3. Inno Setup yoksa `choco install innosetup -y`.
-4. `python build_installer.py`: kararlı exe derlenir, **özet `packaging/launcher.sha256` ile karşılaştırılır (farklıysa yayın durur)**, `KusursuzOCR-Setup-X.Y.Z.exe` ve `.sha256` üretilir (CI'da SAC denemesi atlanır).
+4. `python build_installer.py`: kararlı exe derlenir, **`--selftest` ile çalışma zamanı bağımlılıkları sınanır (başarısızsa yayın durur)**, **özet `packaging/launcher.sha256` ile karşılaştırılır (farklıysa yayın durur)**, `OCRAraci-Setup-X.Y.Z.exe` ve `.sha256` üretilir (CI'da SAC denemesi atlanır).
 5. `gh release create ... --generate-notes --verify-tag` (`-` içeren etiket ön sürüm olur).
 
 ## Kontrol listesi
@@ -37,7 +37,7 @@ gh release view v1.0.1                # kurulum dosyası ve .sha256 oluştu mu
 - [ ] Testler ve `python verify.py` temiz; davranış değiştiyse wiki güncel.
 - [ ] `python tools/release.py X.Y.Z` çalıştırıldı; etiket `v` + `__version__` ile aynı.
 - [ ] Release iş akışı yeşil; günlükte "Kararlı exe özeti onaylananla aynı".
-- [ ] Release'te `KusursuzOCR-Setup-X.Y.Z.exe` ve `.sha256` var.
+- [ ] Release'te `OCRAraci-Setup-X.Y.Z.exe` ve `.sha256` var.
 - [ ] **İndirilmiş (MOTW'li) kurulum dosyasını SAC'lı gerçek bir makinede aç** (CI'da SAC yoktur; CI'ın dosyası hiç denenmemiş dosyadır). Yayına yüklediğin dosya denediğin dosya olmalı: yeniden paketleme özeti değiştirir.
 - [ ] Önceki sürümden uygulama içi güncellemeyi dene: pencere çıktı mı, kurulum başladı mı, uygulama yeniden açıldı mı, Yardım menüsünde yeni sürüm görünüyor mu.
 
@@ -49,7 +49,7 @@ gh release view v1.0.1                # kurulum dosyası ve .sha256 oluştu mu
 | Yayın oluştu ama sürüm hatalı | **Yayınlanmış etiketi taşıma.** Yeni PATCH çıkar. Acilse `gh release delete vX.Y.Z --cleanup-tag` |
 | Kapı "özet DEĞİŞTİ" dedi | [[exe_distribution]] bölüm "Exe'yi bilerek değiştirmek" |
 | `git push` etiketi göndermedi | `git push origin vX.Y.Z` ayrıca |
-| Kurulu kullanıcıda güncelleme başlamadı | `%TEMP%\KusursuzOCRUpdate\install.log` |
+| Kurulu kullanıcıda güncelleme başlamadı | `%TEMP%\OCRAraciUpdate\install.log` |
 
 ## Güvenlik ve sınırlar
 

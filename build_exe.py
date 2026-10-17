@@ -6,6 +6,7 @@ Sürümle değişen uygulama kodu exe'nin dışında `.pyc` olarak durur.
 Exe ikonu (packaging/app_icon.ico) exe özetine girer; pencere ikonu (src/ui/assets) veri dosyası olarak dışarıda kalır. Gerekçe: docs/wiki/exe_distribution.md
 """
 import hashlib
+import importlib.util
 import os
 import sys
 from pathlib import Path
@@ -36,6 +37,19 @@ def file_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def torchvision_extension_arguments() -> List[str]:
+    """
+    torchvision'ın uzantı modüllerini (`_C_stable.pyd`, `image_stable.pyd` / `.so`) açıkça ekler.
+    PyInstaller'ın `--collect-binaries` ve hook'u bunları toplamaz; eksikse "operator torchvision::nms does not exist" hatası çıkar.
+    """
+    spec = importlib.util.find_spec("torchvision")
+    if spec is None or not spec.submodule_search_locations:
+        return []
+    package_dir = Path(next(iter(spec.submodule_search_locations)))
+    extensions = sorted(path for pattern in ("*.pyd", "*.so") for path in package_dir.glob(pattern))
+    return [f"--add-binary={path}{os.pathsep}torchvision" for path in extensions]
+
+
 def pyinstaller_arguments(root: Path = ROOT) -> List[str]:
     """PyInstaller bağımsız değişkenleri (kararlı exe için hepsi gerekli)."""
     arguments = [
@@ -54,7 +68,9 @@ def pyinstaller_arguments(root: Path = ROOT) -> List[str]:
         "--collect-submodules=src",
         "--collect-data=easyocr",
         "--collect-submodules=easyocr",
+        "--collect-binaries=torchvision",  # _C_stable.pyd / image_stable.pyd / DLL: yoksa "torchvision::nms does not exist"
     ]
+    arguments += torchvision_extension_arguments()
     arguments += [f"--hidden-import={name}" for name in HIDDEN_IMPORTS]
     arguments += [f"--exclude-module={name}" for name in EXCLUDED_MODULES]
     return arguments

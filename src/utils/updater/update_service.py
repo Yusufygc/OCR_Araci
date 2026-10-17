@@ -105,7 +105,7 @@ def default_opener(request, timeout: float = REQUEST_TIMEOUT_S):
 
 
 def _request(url: str, opener: Optional[Opener]):
-    headers = {"Accept": "application/vnd.github+json", "User-Agent": "KusursuzOCR-Updater"}
+    headers = {"Accept": "application/vnd.github+json", "User-Agent": "OCRAraci-Updater"}
     return (opener or default_opener)(urllib.request.Request(url, headers=headers), timeout=REQUEST_TIMEOUT_S)
 
 

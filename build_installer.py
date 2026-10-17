@@ -19,9 +19,9 @@ import build_verify
 from src.version import EXE_NAME, INSTALLER_PREFIX, UPDATE_ENV_DISABLE, __version__
 
 ROOT = build_exe.ROOT
-ISS_FILE = ROOT / "packaging" / "KusursuzOCR.iss"
+ISS_FILE = ROOT / "packaging" / "OCRAraci.iss"
 INSTALLER_DIR = ROOT / "dist" / "installer"
-APP_ID = "D303C71B-3E64-4B0C-8342-118BE7BA81E2"  # packaging/KusursuzOCR.iss ile aynı (testle denetlenir)
+APP_ID = "D303C71B-3E64-4B0C-8342-118BE7BA81E2"  # packaging/OCRAraci.iss ile aynı (testle denetlenir)
 
 
 def find_iscc() -> Optional[str]:
@@ -53,6 +53,17 @@ def write_checksum(installer: Path) -> Path:
     return checksum
 
 
+def selftest_executable(exe: Path) -> None:
+    """Exe'nin çalışma zamanı bağımlılıklarını başsız sınar (CI dahil her zaman çalışır)."""
+    try:
+        passed, report = build_verify.selftest_check(exe)
+    except build_verify.LaunchBlockedError as error:
+        sys.exit(f"HATA: {error}. docs/wiki/exe_distribution.md: 'Exe'yi bilerek değiştirmek' (LAUNCHER_EPOCH).")
+    print(report)
+    if not passed:
+        sys.exit("HATA: exe --selftest başarısız (eksik binary/modül). Rapor yukarıda.")
+
+
 def verify_executable(exe: Path) -> None:
     """Exe'yi bu makinede dener; başarısızsa durur (yeniden derlemek aynı exe'yi verir: döngü yok)."""
     try:
@@ -69,7 +80,7 @@ def verify_installer(installer: Path) -> None:
     programs = Path(os.environ.get("APPDATA", "")) / "Microsoft" / "Windows" / "Start Menu" / "Programs"
     try:
         spec = build_verify.InstallerCheckSpec(
-            APP_ID, f"{EXE_NAME}.exe", [programs / "Kusursuz OCR.lnk"], {UPDATE_ENV_DISABLE: "1"}
+            APP_ID, f"{EXE_NAME}.exe", [programs / "OCR Aracı.lnk"], {UPDATE_ENV_DISABLE: "1"}
         )
         build_verify.installer_check(installer, spec)
         print("Kurulum dosyası bu makinede kuruldu, açıldı ve kaldırıldı.")
@@ -94,6 +105,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     exe = build_exe.exe_path()
     if not args.skip_build:
         build_exe.build_executable(verify_hash=False)
+    selftest_executable(exe)
     verify = not (args.no_verify or os.environ.get("CI"))
     if verify and args.update_launcher_hash:
         verify_executable(exe)  # özeti onaylamadan önce bu makinede açıldığından emin ol

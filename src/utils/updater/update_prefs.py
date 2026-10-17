@@ -1,4 +1,4 @@
-"""Güncelleme tercihleri (~/.kusursuzocr/updates.json): açılış denetimi ve atlanan sürüm."""
+"""Güncelleme tercihleri (~/.ocraraci/updates.json): açılış denetimi ve atlanan sürüm."""
 import json
 import os
 import sys
@@ -8,7 +8,7 @@ from typing import Optional
 
 from src.version import RELEASE_REPO, UPDATE_ENV_DISABLE
 
-DEFAULT_PREFS_PATH = Path.home() / ".kusursuzocr" / "updates.json"
+DEFAULT_PREFS_PATH = Path.home() / ".ocraraci" / "updates.json"
 
 
 @dataclass

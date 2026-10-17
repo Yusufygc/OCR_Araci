@@ -40,7 +40,8 @@ from PySide6.QtCore import Qt
 from src.ui.main_window import MainWindow
 from src.ui.styles import DARK_STYLE_SHEET
 from src.ui.icons import IconProvider
-from src.version import EXE_NAME
+from src.selftest import SELFTEST_FLAG, run_selftest
+from src.version import EXE_NAME, SELFTEST_OUT_ENV
 
 
 def _set_taskbar_identity():
@@ -51,6 +52,9 @@ def _set_taskbar_identity():
 
 
 def main():
+    if SELFTEST_FLAG in sys.argv:
+        sys.exit(run_selftest(os.environ.get(SELFTEST_OUT_ENV)))
+
     # Enable High DPI Scaling for crisp fonts and graphics on modern screens
     QApplication.setHighDpiScaleFactorRoundingPolicy(
         Qt.HighDpiScaleFactorRoundingPolicy.PassThrough

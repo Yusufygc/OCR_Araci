@@ -1,9 +1,9 @@
-; Kusursuz OCR kurulum betiği (Inno Setup 6). Derleme: python build_installer.py
+﻿; OCR Aracı kurulum betiği (Inno Setup 6). Derleme: python build_installer.py
 #ifndef AppVersion
   #define AppVersion "0.0.0"
 #endif
-#define AppName "Kusursuz OCR"
-#define AppExe "KusursuzOCR.exe"
+#define AppName "OCR Aracı"
+#define AppExe "OCRAraci.exe"
 
 [Setup]
 ; AppId SABİT: değişirse sonraki sürüm üstüne yazmaz, ikinci kurulum olur
@@ -21,7 +21,7 @@ CloseApplications=yes
 RestartApplications=no
 ArchitecturesInstallIn64BitMode=x64compatible
 OutputDir=..\dist\installer
-OutputBaseFilename=KusursuzOCR-Setup-{#AppVersion}
+OutputBaseFilename=OCRAraci-Setup-{#AppVersion}
 UninstallDisplayIcon={app}\{#AppExe}
 SetupIconFile=app_icon.ico
 Compression=lzma2
@@ -32,7 +32,7 @@ WizardStyle=modern
 Name: "turkish"; MessagesFile: "compiler:Languages\Turkish.isl"
 
 [Files]
-Source: "..\dist\KusursuzOCR\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\dist\OCRAraci\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{autoprograms}\{#AppName}"; Filename: "{app}\{#AppExe}"

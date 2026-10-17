@@ -38,6 +38,23 @@ def launch_check(exe: Path, seconds: int = LAUNCH_SECONDS, env_extra: Optional[D
     return alive
 
 
+def selftest_check(exe: Path, timeout: int = 300) -> Tuple[bool, str]:
+    """`exe --selftest` çalıştırır; (başarılı mı, rapor) döner. Hata penceresi açık kalsa bile yakalar."""
+    report_path = Path(tempfile.mkdtemp(prefix="selftest_")) / "rapor.txt"
+    env = dict(os.environ, OCRARACI_SELFTEST_OUT=str(report_path))
+    try:
+        result = subprocess.run([str(exe), "--selftest"], env=env, cwd=str(exe.parent), timeout=timeout, check=False)
+    except subprocess.TimeoutExpired:
+        return False, f"Zaman aşımı ({timeout} sn): exe --selftest bitmedi (hata penceresi açık kalmış olabilir)"
+    except OSError as error:
+        if getattr(error, "winerror", None) in SAC_BLOCK_WINERRORS:
+            raise LaunchBlockedError(f"{exe.name} engellendi (WinError {error.winerror})") from error
+        raise
+    report = report_path.read_text(encoding="utf-8") if report_path.exists() else "(rapor dosyası oluşmadı)"
+    shutil.rmtree(report_path.parent, ignore_errors=True)
+    return result.returncode == 0, report
+
+
 # --- Gerçek kurulumu koruma: deneme kurulumu aynı AppId'yi kullanır ---
 
 def uninstall_key_path(app_id: str) -> str:
@@ -126,6 +143,9 @@ def installer_check(installer: Path, spec: InstallerCheckSpec) -> None:
     target = Path(tempfile.mkdtemp(prefix="installer_check_"))
     try:
         _silent_install(installer, target)
+        passed, report = selftest_check(target / spec.exe_name)
+        if not passed:
+            raise RuntimeError(f"Kurulan {spec.exe_name} --selftest başarısız:\n{report}")
         if not launch_check(target / spec.exe_name, env_extra=spec.env_extra):
             raise RuntimeError(f"Kurulan {spec.exe_name} açılıp kapandı")
         _silent_uninstall(target)

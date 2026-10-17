@@ -6,8 +6,8 @@ Uygulama genelinde hardcoded metin ve emoji kullanımını engelleyen tek doğru
 
 class UIStrings:
     # Uygulama Başlığı ve Durum Çubuğu
-    APP_TITLE = "Kusursuz OCR - Yerel Metin Ayrıştırma"
-    STATUS_BAR_READY = "Kusursuz OCR Uygulaması | Hazır"
+    APP_TITLE = "OCR Aracı - Yerel Metin Ayrıştırma"
+    STATUS_BAR_READY = "OCR Aracı Uygulaması | Hazır"
 
     # Üst Kontrol Çubuğu
     BTN_OPEN_IMAGE = "Görsel Yükle"

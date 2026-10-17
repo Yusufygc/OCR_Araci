@@ -1,6 +1,6 @@
 # Windows exe Dağıtımı: Kararlı exe, Kurulum Sihirbazı ve Akıllı Uygulama Denetimi
 
-Bu sayfa, imzasız Kusursuz OCR uygulamasının sorunsuz kurulması için kullanılan **kararlı exe** tasarımını ve gerekçesini toplar. Sürüm / yayın adımları: [[release_process]]. Uygulama içi güncelleme: [[update_system]]. Eski paketleme notları ve CI: [[deployment]].
+Bu sayfa, imzasız OCR Aracı uygulamasının sorunsuz kurulması için kullanılan **kararlı exe** tasarımını ve gerekçesini toplar. Sürüm / yayın adımları: [[release_process]]. Uygulama içi güncelleme: [[update_system]]. Eski paketleme notları ve CI: [[deployment]].
 
 **Karar (kullanıcı):** kod imzalama ve lisanslama yapılmaz. İmza sertifikası, SignPath benzeri hesap/başvuru, `LICENSE` / bildirim dosyası bu çalışmanın kapsamı dışındadır; Inno betiğinde `LicenseFile` ve imza yönergeleri bilinçli olarak yoktur (`tests/test_release_packaging.py` bunu denetler).
 
@@ -37,7 +37,7 @@ Bedel: Gezgin'de exe → Özellikler hep `1.0.0.0` gösterir; ürün sürümü `
 
 ### 2.1 Onay kapısı: `packaging/launcher.sha256`
 
-Bu makinede gerçekten **açılmış** exe özeti depoya yazılır (`<64 hane> *KusursuzOCR.exe`). `build_exe.check_launcher_hash` derleme sonrası karşılaştırır:
+Bu makinede gerçekten **açılmış** exe özeti depoya yazılır (`<64 hane> *OCRAraci.exe`). `build_exe.check_launcher_hash` derleme sonrası karşılaştırır:
 
 - aynı: devam; farklı ya da dosya yok: **derleme ve yayın durur** (`SystemExit`);
 - bilerek değiştirildiyse: `python build_installer.py --update-launcher-hash` (önce exe makinede açılır, sonra özet yazılır).
@@ -48,13 +48,13 @@ Release iş akışı da aynı kapıdan geçer (`build_installer.py`, `--no-verif
 
 `tests/test_release_packaging.py`: `launcher.py`, `launcher_version_info.txt` (LF'ye çevrilerek) ve `app_icon.ico` SHA-256 değerleri testte sabittir; PyInstaller bayrakları, `LAUNCHER_EPOCH`, kapı davranışı (farklı özet / onay yok / `update`), Inno ayarları ve yayın iş akışının kapıyı atlamadığı denetlenir.
 
-## 3. Kurulum sihirbazı (Inno Setup 6): `packaging/KusursuzOCR.iss`
+## 3. Kurulum sihirbazı (Inno Setup 6): `packaging/OCRAraci.iss`
 
 - `AppId` **sabit** (`D303C71B-...`; değişirse sonraki sürüm üstüne yazmaz). `build_installer.APP_ID` ile aynı olduğu testle denetlenir.
 - `PrivilegesRequired=lowest`: UAC sormaz, güncelleme sessiz çalışır; `PrivilegesRequiredOverridesAllowed=dialog`.
 - `CloseApplications=yes`, `RestartApplications=no`; yeniden açmayı `[Run]` içindeki `Check: RelaunchAfterUpdate` yapar: `WizardSilent and not HasParam('/VERYSILENT')`. Uygulama içi güncelleme `/SILENT` (ilerleme penceresi görünür, yeniden açılır), derleme sonrası deneme `/VERYSILENT` (açmaz).
-- Çıktı adı sürümlüdür: `KusursuzOCR-Setup-X.Y.Z.exe`; güncelleyici bu desene bakar.
-- Kullanıcı verisi (`~/.kusursuzocr`, EasyOCR model önbelleği) kaldırıcı tarafından silinmez.
+- Çıktı adı sürümlüdür: `OCRAraci-Setup-X.Y.Z.exe`; güncelleyici bu desene bakar.
+- Kullanıcı verisi (`~/.ocraraci`, EasyOCR model önbelleği) kaldırıcı tarafından silinmez.
 - **Tesseract paketlenmez:** kullanıcı Tesseract'ı ayrıca kurmalıdır (`TesseractEngine` standart dizinleri otomatik arar). EasyOCR modelleri ilk kullanımda indirilir (internet gerekir).
 
 ## 4. Derleme ve doğrulama betikleri
@@ -67,6 +67,8 @@ Release iş akışı da aynı kapıdan geçer (`build_installer.py`, `--no-verif
 | `build_exe.bat` | `build_installer.py` için ince sarmalayıcı (eski `ocr_app.spec` kaldırıldı) |
 
 **Gerçek kurulumu koruma:** deneme kurulumu gerçek kurulumla aynı `AppId`'yi kullanır; Inno aynı `HKCU\...\Uninstall\{AppId}_is1` kaydını ve Başlat menüsü kısayolunu yazar/siler. `save_registration` / `restore_registration` bunları yedekler ve `try/finally` ile her durumda geri yazar (`tests/test_build_verify.py`).
+
+**Başsız kendi kendini sınama (`OCRAraci.exe --selftest`, `src/selftest.py`):** exe'nin "açık kalması" yetmez, çünkü eksik bir binary hata penceresiyle de süreci açık tutar (yaşandı: `operator torchvision::nms does not exist`; PyInstaller hook'u yeni torchvision dosyalarını — `_C_stable.pyd`, `image_stable.pyd`, DLL'ler — toplamamıştı, `--collect-binaries` yalnız DLL'leri toplar, `.pyd` uzantı modüllerini toplamaz; çözüm `build_exe.torchvision_extension_arguments()` ile her `.pyd`/`.so` için `--add-binary`). Selftest pencere açmadan torchvision özel işlemini (`nms`), EasyOCR motorunu, OpenCV hattını ve dışa aktarıcıları gerçekten çalıştırır; rapor `OCRARACI_SELFTEST_OUT` dosyasına yazılır, sonuç çıkış koduyla verilir. `build_installer.py` bunu **her zaman** (CI dahil) hem derlenen exe'ye hem deneme kurulumundaki exe'ye uygular; başarısızsa derleme ve yayın durur.
 
 Exe denemesi başarısızsa `build_installer.py` durur (yeniden derlemek aynı exe'yi verir, döngü yok). Kurulum dosyası denemesi başarısızsa yalnızca uyarıdır (her sürümde yeni tek çalıştırılabilir dosya budur).
 
@@ -91,7 +93,8 @@ Gerekçeler: PyInstaller/Python yükseltme, simge, giriş betiği ya da sürüm 
 6. Deneme kurulumunu gerçek `AppId` ile yapıp kaydı yedeklememek; kaldırıcıyı denemeden bırakmak.
 7. `PrivilegesRequired=admin` (Python'dan `CreateProcess` 740 verir).
 8. UPX kullanmak; kapıyı atlamak (`--no-verify` ile yayın, özet dosyasını CI'da yeniden üretmek).
-9. Kabuk heredoc'u ile kod yazmak (kaçışlar bozulur; dosya yazma aracı kullan).
+9. Exe'nin açık kalmasını tek doğrulama saymak (hata penceresi de süreci açık tutar): `--selftest` şarttır.
+10. Kabuk heredoc'u ile kod yazmak (kaçışlar bozulur; dosya yazma aracı kullan).
 
 ## 7. Doğrulama durumu
 
