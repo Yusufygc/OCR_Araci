@@ -1,5 +1,5 @@
 # GERÇEK KULLANICI TESTİ, PAINT KARALAMA TEMİZLEME VE OCR KALİTE RAPORU
-**Test Tarihi:** 2026-10-17 03:16:55
+**Test Tarihi:** 2026-10-17 03:32:29
 **Test Klasörü:** `C:\2UYGULAMALAR\P021-OCR\REAL_TEST`
 
 ---
@@ -7,26 +7,26 @@
 ### Test Özeti Tablosu (10 Senaryo x 2 Motor = 20 OCR Koşumu)
 | Görsel | Motor | Süre (sn) | Güven (%) | Başarı | Anahtar Kelime |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| sample1_dark_ui1.png | EasyOCR (Derin Öğrenme) | 3.61s | 81.4% | BAŞARILI | 5/5 |
-| sample1_dark_ui1.png | PyTesseract (Hızlı Çevrimdışı) | 1.29s | 87.4% | BAŞARILI | 5/5 |
-| sample2_dark_ui2.png | EasyOCR (Derin Öğrenme) | 3.74s | 79.3% | BAŞARILI | 4/5 |
-| sample2_dark_ui2.png | PyTesseract (Hızlı Çevrimdışı) | 1.68s | 91.3% | BAŞARILI | 5/5 |
-| sample3_search_snippet.png | EasyOCR (Derin Öğrenme) | 1.39s | 87.0% | BAŞARILI | 5/5 |
-| sample3_search_snippet.png | PyTesseract (Hızlı Çevrimdışı) | 0.56s | 91.6% | BAŞARILI | 5/5 |
-| sample4_wiki_document.png | EasyOCR (Derin Öğrenme) | 3.35s | 79.6% | BAŞARILI | 5/5 |
+| sample1_dark_ui1.png | EasyOCR (Derin Öğrenme) | 3.53s | 81.4% | BAŞARILI | 5/5 |
+| sample1_dark_ui1.png | PyTesseract (Hızlı Çevrimdışı) | 1.24s | 87.4% | BAŞARILI | 5/5 |
+| sample2_dark_ui2.png | EasyOCR (Derin Öğrenme) | 2.55s | 79.3% | BAŞARILI | 4/5 |
+| sample2_dark_ui2.png | PyTesseract (Hızlı Çevrimdışı) | 1.57s | 91.3% | BAŞARILI | 5/5 |
+| sample3_search_snippet.png | EasyOCR (Derin Öğrenme) | 1.08s | 87.0% | BAŞARILI | 5/5 |
+| sample3_search_snippet.png | PyTesseract (Hızlı Çevrimdışı) | 0.55s | 91.6% | BAŞARILI | 5/5 |
+| sample4_wiki_document.png | EasyOCR (Derin Öğrenme) | 3.51s | 79.6% | BAŞARILI | 5/5 |
 | sample4_wiki_document.png | PyTesseract (Hızlı Çevrimdışı) | 0.89s | 87.2% | BAŞARILI | 3/5 |
-| sample5_video_player.png | EasyOCR (Derin Öğrenme) | 2.92s | 53.9% | BAŞARILI | 3/5 |
-| sample5_video_player.png | PyTesseract (Hızlı Çevrimdışı) | 0.58s | 74.9% | BAŞARILI | 4/5 |
-| sample6_movie_info.png | EasyOCR (Derin Öğrenme) | 2.06s | 82.8% | BAŞARILI | 5/5 |
-| sample6_movie_info.png | PyTesseract (Hızlı Çevrimdışı) | 0.80s | 82.9% | BAŞARILI | 5/5 |
-| sample7_paint_scribbles_light.png | EasyOCR (Derin Öğrenme) | 4.57s | 64.1% | BAŞARILI | 4/5 |
-| sample7_paint_scribbles_light.png | PyTesseract (Hızlı Çevrimdışı) | 0.89s | 82.0% | BAŞARILI | 5/5 |
-| sample8_paint_scribbles_dark.png | EasyOCR (Derin Öğrenme) | 2.28s | 80.2% | BAŞARILI | 5/5 |
-| sample8_paint_scribbles_dark.png | PyTesseract (Hızlı Çevrimdışı) | 0.82s | 75.1% | BAŞARILI | 5/5 |
-| sample9_opensource_paint_skew.png | EasyOCR (Derin Öğrenme) | 1.24s | 73.7% | BAŞARILI | 5/5 |
-| sample9_opensource_paint_skew.png | PyTesseract (Hızlı Çevrimdışı) | 0.48s | 90.4% | BAŞARILI | 5/5 |
-| sample10_diagram_clean.png | EasyOCR (Derin Öğrenme) | 0.68s | 78.1% | BAŞARILI | 3/7 |
-| sample10_diagram_clean.png | PyTesseract (Hızlı Çevrimdışı) | 0.37s | 76.4% | BAŞARILI | 5/7 |
+| sample5_video_player.png | EasyOCR (Derin Öğrenme) | 3.15s | 53.9% | BAŞARILI | 3/5 |
+| sample5_video_player.png | PyTesseract (Hızlı Çevrimdışı) | 0.56s | 74.9% | BAŞARILI | 4/5 |
+| sample6_movie_info.png | EasyOCR (Derin Öğrenme) | 1.93s | 82.8% | BAŞARILI | 5/5 |
+| sample6_movie_info.png | PyTesseract (Hızlı Çevrimdışı) | 0.78s | 82.9% | BAŞARILI | 5/5 |
+| sample7_paint_scribbles_light.png | EasyOCR (Derin Öğrenme) | 3.27s | 64.1% | BAŞARILI | 4/5 |
+| sample7_paint_scribbles_light.png | PyTesseract (Hızlı Çevrimdışı) | 0.86s | 82.0% | BAŞARILI | 5/5 |
+| sample8_paint_scribbles_dark.png | EasyOCR (Derin Öğrenme) | 1.81s | 80.2% | BAŞARILI | 5/5 |
+| sample8_paint_scribbles_dark.png | PyTesseract (Hızlı Çevrimdışı) | 0.76s | 75.1% | BAŞARILI | 5/5 |
+| sample9_opensource_paint_skew.png | EasyOCR (Derin Öğrenme) | 1.10s | 73.7% | BAŞARILI | 5/5 |
+| sample9_opensource_paint_skew.png | PyTesseract (Hızlı Çevrimdışı) | 0.45s | 90.4% | BAŞARILI | 5/5 |
+| sample10_diagram_clean.png | EasyOCR (Derin Öğrenme) | 0.54s | 78.1% | BAŞARILI | 3/7 |
+| sample10_diagram_clean.png | PyTesseract (Hızlı Çevrimdışı) | 0.33s | 76.4% | BAŞARILI | 5/7 |
 
 ---
 
@@ -34,7 +34,7 @@
 - **Dosya:** `sample1_dark_ui1.png` (`Pipeline: raw`)
 
 ### Motor Çıktısı: EasyOCR (Derin Öğrenme)
-- **İşlem Süresi:** 3.61 saniye
+- **İşlem Süresi:** 3.53 saniye
 - **Ortalama Güven Skoru:** 81.39%
 - **Anahtar Kelime Eşleşmesi:** 5/5 (`Dinamik Ekran Boyutu, MainWindow, Merkezine, showEvent, Wiki`)
 ```text
@@ -53,7 +53,7 @@ files changed +55-3 Review
 ```
 
 ### Motor Çıktısı: PyTesseract (Hızlı Çevrimdışı)
-- **İşlem Süresi:** 1.29 saniye
+- **İşlem Süresi:** 1.24 saniye
 - **Ortalama Güven Skoru:** 87.38%
 - **Anahtar Kelime Eşleşmesi:** 5/5 (`Dinamik Ekran Boyutu, MainWindow, Merkezine, showEvent, Wiki`)
 ```text
@@ -77,7 +77,7 @@ verify.py sifir bulgu ile dogrulandi ve docs/wiki/ui_system.md ile docs/wiki/log
 - **Dosya:** `sample2_dark_ui2.png` (`Pipeline: raw`)
 
 ### Motor Çıktısı: EasyOCR (Derin Öğrenme)
-- **İşlem Süresi:** 3.74 saniye
+- **İşlem Süresi:** 2.55 saniye
 - **Ortalama Güven Skoru:** 79.29%
 - **Anahtar Kelime Eşleşmesi:** 4/5 (`deskew, remove_color_annotations, binarize_adaptive, prepare_for_ocr`)
 ```text
@@ -99,7 +99,7 @@ Boru Hattı Sıralaması:main_window.py içinde geometrik deskew adımı; gürü
 ```
 
 ### Motor Çıktısı: PyTesseract (Hızlı Çevrimdışı)
-- **İşlem Süresi:** 1.68 saniye
+- **İşlem Süresi:** 1.57 saniye
 - **Ortalama Güven Skoru:** 91.34%
 - **Anahtar Kelime Eşleşmesi:** 5/5 (`Görüntü Önişleme, deskew, remove_color_annotations, binarize_adaptive, prepare_for_ocr`)
 ```text
@@ -126,7 +126,7 @@ Otomatik Kenar Boşluğu ve Küçük Metin Büyütme:prepare_for_ocr sharpen ve
 - **Dosya:** `sample3_search_snippet.png` (`Pipeline: raw`)
 
 ### Motor Çıktısı: EasyOCR (Derin Öğrenme)
-- **İşlem Süresi:** 1.39 saniye
+- **İşlem Süresi:** 1.08 saniye
 - **Ortalama Güven Skoru:** 86.96%
 - **Anahtar Kelime Eşleşmesi:** 5/5 (`Film izle Hell, Soulm8te, Türkçe Dublaj, yapay zekayı, kaos`)
 ```text
@@ -138,7 +138,7 @@ yapmaya çalısırken; bu durum amansız bir kaos
 ```
 
 ### Motor Çıktısı: PyTesseract (Hızlı Çevrimdışı)
-- **İşlem Süresi:** 0.56 saniye
+- **İşlem Süresi:** 0.55 saniye
 - **Ortalama Güven Skoru:** 91.57%
 - **Anahtar Kelime Eşleşmesi:** 5/5 (`Film izle Hell, Soulm8te, Türkçe Dublaj, yapay zekayı, kaos`)
 ```text
@@ -155,7 +155,7 @@ yapmaya bu durum amansiz bir kaos
 - **Dosya:** `sample4_wiki_document.png` (`Pipeline: raw`)
 
 ### Motor Çıktısı: EasyOCR (Derin Öğrenme)
-- **İşlem Süresi:** 3.35 saniye
+- **İşlem Süresi:** 3.51 saniye
 - **Ortalama Güven Skoru:** 79.57%
 - **Anahtar Kelime Eşleşmesi:** 5/5 (`Program çeşitleri, Bankacılık, Vergi Hukuku, Kamu Hukuku, Özel Hukuk`)
 ```text
@@ -190,7 +190,7 @@ acilmis ve bazi Universitelerin LLM programlari hukuk disinda lisans yapmis 6gre
 - **Dosya:** `sample5_video_player.png` (`Pipeline: raw`)
 
 ### Motor Çıktısı: EasyOCR (Derin Öğrenme)
-- **İşlem Süresi:** 2.92 saniye
+- **İşlem Süresi:** 3.15 saniye
 - **Ortalama Güven Skoru:** 53.91%
 - **Anahtar Kelime Eşleşmesi:** 3/5 (`Altyazılı, Yatırım, Turnuvalar`)
 ```text
@@ -201,7 +201,7 @@ C 10200 / 1240.10 0 @ # @ /
 ```
 
 ### Motor Çıktısı: PyTesseract (Hızlı Çevrimdışı)
-- **İşlem Süresi:** 0.58 saniye
+- **İşlem Süresi:** 0.56 saniye
 - **Ortalama Güven Skoru:** 74.89%
 - **Anahtar Kelime Eşleşmesi:** 4/5 (`Türkçe Dublaj, 1:40:10, Yatırım, Turnuvalar`)
 ```text
@@ -220,7 +220,7 @@ Denote DO
 - **Dosya:** `sample6_movie_info.png` (`Pipeline: raw`)
 
 ### Motor Çıktısı: EasyOCR (Derin Öğrenme)
-- **İşlem Süresi:** 2.06 saniye
+- **İşlem Süresi:** 1.93 saniye
 - **Ortalama Güven Skoru:** 82.79%
 - **Anahtar Kelime Eşleşmesi:** 5/5 (`Filminin Bilgileri, teknoloji devi, yapay zeka, 99 dakika, Gerilim`)
 ```text
@@ -244,7 +244,7 @@ Sara / Lydia David Was.Aubrey Mac Ben Hoffma Terrance Lizzie Circe
 ```
 
 ### Motor Çıktısı: PyTesseract (Hızlı Çevrimdışı)
-- **İşlem Süresi:** 0.80 saniye
+- **İşlem Süresi:** 0.78 saniye
 - **Ortalama Güven Skoru:** 82.91%
 - **Anahtar Kelime Eşleşmesi:** 5/5 (`Filminin Bilgileri, teknoloji devi, yapay zeka, 99 dakika, Gerilim`)
 ```text
@@ -273,7 +273,7 @@ Lily Sull...David R..Claudia...ArtyFr...Elijah Mara Huf
 - **Dosya:** `sample7_paint_scribbles_light.png` (`Pipeline: clean_paint`)
 
 ### Motor Çıktısı: EasyOCR (Derin Öğrenme)
-- **İşlem Süresi:** 4.57 saniye
+- **İşlem Süresi:** 3.27 saniye
 - **Ortalama Güven Skoru:** 64.05%
 - **Anahtar Kelime Eşleşmesi:** 4/5 (`Program çeşitleri, Bankacılık, Rekabet Hukuku, Hakları`)
 ```text
@@ -286,7 +286,7 @@ açılmıs ve bazı üniversitelerin LLM programları hukuk dışında lisans ya
 ```
 
 ### Motor Çıktısı: PyTesseract (Hızlı Çevrimdışı)
-- **İşlem Süresi:** 0.89 saniye
+- **İşlem Süresi:** 0.86 saniye
 - **Ortalama Güven Skoru:** 82.03%
 - **Anahtar Kelime Eşleşmesi:** 5/5 (`Program çeşitleri, Bankacılık, Rekabet Hukuku, University, Hakları`)
 ```text
@@ -306,7 +306,7 @@ acilmis ve bazi Universitelerin LLM programlari hukuk disinda lisans yapmis 6Gre
 - **Dosya:** `sample8_paint_scribbles_dark.png` (`Pipeline: clean_paint`)
 
 ### Motor Çıktısı: EasyOCR (Derin Öğrenme)
-- **İşlem Süresi:** 2.28 saniye
+- **İşlem Süresi:** 1.81 saniye
 - **Ortalama Güven Skoru:** 80.20%
 - **Anahtar Kelime Eşleşmesi:** 5/5 (`Filminin Bilgileri, teknoloji devi, yapay zeka, 99 dakika, 14,573`)
 ```text
@@ -329,7 +329,7 @@ Sara / Lydia David Was.Aubrey Mac Ben Hoffma Terrance Lizzie Circe
 ```
 
 ### Motor Çıktısı: PyTesseract (Hızlı Çevrimdışı)
-- **İşlem Süresi:** 0.82 saniye
+- **İşlem Süresi:** 0.76 saniye
 - **Ortalama Güven Skoru:** 75.14%
 - **Anahtar Kelime Eşleşmesi:** 5/5 (`Filminin Bilgileri, teknoloji devi, yapay zeka, 99 dakika, 14,573`)
 ```text
@@ -357,7 +357,7 @@ Lily Sull...David R..Claudia...ArtyFr...Elijah Mara Huf
 - **Dosya:** `sample9_opensource_paint_skew.png` (`Pipeline: clean_paint_and_deskew`)
 
 ### Motor Çıktısı: EasyOCR (Derin Öğrenme)
-- **İşlem Süresi:** 1.24 saniye
+- **İşlem Süresi:** 1.10 saniye
 - **Ortalama Güven Skoru:** 73.66%
 - **Anahtar Kelime Eşleşmesi:** 5/5 (`Acik Kaynak, Bilgisayarli goru, derin ogrenme, Hough donusumu, Telea inpainting`)
 ```text
@@ -369,7 +369,7 @@ harflerin uzerindeki kirmizi vc mavi sekilleri dokuyu koruyarak siler.
 ```
 
 ### Motor Çıktısı: PyTesseract (Hızlı Çevrimdışı)
-- **İşlem Süresi:** 0.48 saniye
+- **İşlem Süresi:** 0.45 saniye
 - **Ortalama Güven Skoru:** 90.37%
 - **Anahtar Kelime Eşleşmesi:** 5/5 (`Acik Kaynak, Bilgisayarli goru, derin ogrenme, Hough donusumu, Telea inpainting`)
 ```text
@@ -386,7 +386,7 @@ harflerin uzerindeki kirmizi ve mavi sekilleri dokuyu koruyarak siler.
 - **Dosya:** `sample10_diagram_clean.png` (`Pipeline: raw`)
 
 ### Motor Çıktısı: EasyOCR (Derin Öğrenme)
-- **İşlem Süresi:** 0.68 saniye
+- **İşlem Süresi:** 0.54 saniye
 - **Ortalama Güven Skoru:** 78.10%
 - **Anahtar Kelime Eşleşmesi:** 3/7 (`Finansal Veriler, Sosyal Medya, Duygu Analizi`)
 ```text
@@ -425,7 +425,7 @@ DANISMANI
 ```
 
 ### Motor Çıktısı: PyTesseract (Hızlı Çevrimdışı)
-- **İşlem Süresi:** 0.37 saniye
+- **İşlem Süresi:** 0.33 saniye
 - **Ortalama Güven Skoru:** 76.41%
 - **Anahtar Kelime Eşleşmesi:** 5/7 (`Finansal Veriler, Sosyal Medya, Makine Öğrenmesi, Fiyat Tahmini, Duygu Analizi`)
 ```text

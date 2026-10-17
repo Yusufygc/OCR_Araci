@@ -208,12 +208,14 @@ def _apply_pipeline(cv_img: np.ndarray, pipeline: str, img_id: str, exports_dir:
 
 
 def _export_formats(text: str, img_id: str, engine_key: str, exports_dir: str):
-    """Exports OCR text to TXT, PDF, and DOCX formats."""
+    """Exports OCR text to TXT, PDF, and DOCX formats without regional headers."""
+    from src.ui.components.text_editor import TextEditorPanel
+    clean_text = TextEditorPanel.strip_region_headers(text)
     for fmt in ["txt", "pdf", "docx"]:
         out_name = f"{img_id}_{engine_key}.{fmt}"
         out_path = os.path.join(exports_dir, out_name)
         exporter = ExporterFactory.get_exporter(fmt)
-        exporter.export(text, out_path)
+        exporter.export(clean_text, out_path)
 
 
 def _evaluate_engine(engine_key: str, cv_img: np.ndarray, img_meta: dict, exports_dir: str):

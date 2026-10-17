@@ -23,6 +23,15 @@ class TestUIComponents(unittest.TestCase):
         self.assertIn("Kelime: 5", panel.lbl_stats.text())
         self.assertIn("Satır: 2", panel.lbl_stats.text())
 
+    def test_text_editor_strip_region_headers(self):
+        panel = TextEditorPanel()
+        raw_text = "[1. Bölge]\nFinansal\nVeriler\n\n[2. Bölge]\nHaberler &\nSosyal Medya"
+        clean = panel.strip_region_headers(raw_text)
+        self.assertNotIn("[1. Bölge]", clean)
+        self.assertNotIn("[2. Bölge]", clean)
+        self.assertIn("Finansal\nVeriler", clean)
+        self.assertIn("Haberler &\nSosyal Medya", clean)
+
     def test_filter_panel_initial_state(self):
         panel = FilterPanel()
         self.assertTrue(panel.chk_contrast.isChecked())

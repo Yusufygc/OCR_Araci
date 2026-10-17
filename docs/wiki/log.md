@@ -4,6 +4,12 @@ Bu dosya, projedeki mimari kararların, kaynak içeri alımlarının (ingest), k
 
 ---
 
+## [2026-10-17] [FIX] | "Word Kaydet" Buton Metni Düzeltildi ve Dosya Kaydında Bölge Başlıkları Temizlendi
+- `UIStrings`: "Word (DOCX) Olarak Kaydet" metni sağ panel buton genişliğine sığmayıp "Word (DOCX) Olarak Kay" şeklinde kesiliyordu. Buton metinleri sadeleştirilerek `Word Kaydet`, `TXT Kaydet` ve `PDF Kaydet` olarak güncellendi.
+- `TextEditorPanel.strip_region_headers`: Dosyaya dışa aktarırken (`export_document`) `[1. Bölge]`, `[2. Seçili Bölge]` gibi dahili bölge etiketleri düzenli ifadeyle temizlenerek Word (.docx), TXT ve PDF dosyalarının temiz paragraf metinleri olarak kaydedilmesi sağlandı.
+- `TextEditorPanel.init_ui`: Fonksiyon metrikleri kuralı (maks 35 satır) gereği buton oluşturma mantığı `_build_action_buttons` yardımcı metoduna ayrıştırıldı.
+- `tests/test_ui_components.py`: `test_text_editor_strip_region_headers` birim testi eklendi (56/56 test başarılı, `verify.py` sıfır bulgu).
+
 ## [2026-10-17] [FEAT] | Bölgesel ve Blok Tabanlı Tarama, Tak-Çıkar Strateji Deseni ve Tıklanabilir Kutu Katmanı Eklendi
 - `src/core/layout/`: `ILayoutAnalyzer` ve `XYCutLayoutAnalyzer` 2D uzamsal boşluk analizi ve hiyerarşik okuma sırası düzenleyicisi kuruldu. Akış şemaları ve çok sütunlu infografiklerde paralel blokların yatayda birbirine karışması (`Fiyat Duygu Risk Portföy / Tahmini Analizi Profili Optimizasyonu`) çözüldü; her blok `[1. Bölge: Finansal Veriler]`, `[4. Bölge: Fiyat Tahmini]`, `[5. Bölge: Duygu Analizi]` şeklinde yapısal olarak ayrıştırıldı.
 - `src/core/strategies/`: `IScanStrategy` sözleşmesi ve `ScanStrategyFactory` tak-çıkar fabrika mimarisi kuruldu. Kod bağımlılığı olmadan modlar eklenebilir: `LineScanStrategy` (Düz metin / satır satır), `BlockScanStrategy` (Bölgesel / şema blokları) ve `MultiRegionStrategy` (Seçili alanlar).

@@ -48,9 +48,9 @@ class UIStrings:
     EDITOR_PLACEHOLDER = "Görsel yükleyip 'Metni Ayrıştır' butonuna bastığınızda ayrıştırılan metin burada görüntülenecektir..."
     STATS_FORMAT = "Kelime: {words} | Karakter: {chars} | Satır: {lines}"
     BTN_COPY_TEXT = "Metni Kopyala"
-    BTN_EXPORT_TXT = "TXT Olarak Kaydet"
-    BTN_EXPORT_DOCX = "Word (DOCX) Olarak Kaydet"
-    BTN_EXPORT_PDF = "PDF Olarak Kaydet"
+    BTN_EXPORT_TXT = "TXT Kaydet"
+    BTN_EXPORT_DOCX = "Word Kaydet"
+    BTN_EXPORT_PDF = "PDF Kaydet"
 
     # Diyaloglar ve Mesajlar
     DIALOG_OPEN_IMAGE = "Görsel Seç"
