@@ -38,5 +38,5 @@ Paketlenmiş (exe) uygulama açılışta GitHub Releases'te yeni sürüm arar; v
 ## Sınırlar ve doğrulama durumu
 
 - Yalnızca Windows. İndirme sürerken iptal düğmesi yoktur.
-- `RELEASE_REPO` henüz boş: bu depo GitHub'a gönderilmediği için güncelleme denetimi kapalıdır.
-- **Doğrulanan:** `tests/test_update_service.py`, `tests/test_update_controller.py`, `tests/test_update_prefs.py` (sahte ağ/servis ile). **Doğrulanmayan:** gerçek bir Release üzerinden uçtan uca güncelleme ve SAC'lı makinede kurulum; depo tanımlanıp iki sürüm yayınlandıktan sonra [[release_process]] kontrol listesiyle denenmelidir.
+- `RELEASE_REPO` = `Yusufygc/OCR_Araci`. Henüz Release yayınlanmadığı için denetim yalnızca yeni etiket çıkınca anlamlı sonuç verir.
+- **Doğrulanan:** `tests/test_update_service.py`, `tests/test_update_controller.py`, `tests/test_update_prefs.py` (sahte ağ/servis ile). **Doğrulanmayan:** gerçek bir Release üzerinden uçtan uca güncelleme ve SAC'lı makinede kurulum; iki sürüm yayınlandıktan sonra [[release_process]] kontrol listesiyle denenmelidir.

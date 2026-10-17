@@ -3,7 +3,7 @@
 __version__ = "1.0.0"
 
 # Güncelleme denetiminin bakacağı GitHub deposu ("sahip/depo"). Boşsa güncelleme denetimi kapalıdır.
-RELEASE_REPO = ""
+RELEASE_REPO = "Yusufygc/OCR_Araci"
 
 APP_NAME = "Kusursuz OCR"
 EXE_NAME = "KusursuzOCR"

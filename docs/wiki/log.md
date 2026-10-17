@@ -4,6 +4,11 @@ Bu dosya, projedeki mimari kararların, kaynak içeri alımlarının (ingest), k
 
 ---
 
+## [2026-10-17] [DEPLOY] | Güncelleme Deposu Ayarlandı ve Kod GitHub'a Gönderildi
+- Depo `https://github.com/Yusufygc/OCR_Araci` (public) olarak bağlandı; yerel dal `main` olarak yeniden adlandırılıp `origin/main`'e gönderildi (eski yerel `master` dalı durur).
+- `src/version.py`: `RELEASE_REPO = "Yusufygc/OCR_Araci"`; uygulama içi güncelleme denetimi artık yapılandırılmış depoya bakar (yalnızca paketlenmiş exe'de açılışta, [[update_system]]).
+- Henüz etiket/Release yok: ilk `python tools/release.py X.Y.Z` + `git push origin vX.Y.Z` kullanıcı isteğiyle yapılır ([[release_process]]). CI'da derlenen exe özetinin yerelle aynı olduğu ilk Release'te doğrulanacak.
+
 ## [2026-10-17] [DEPLOY] | Kararlı exe, Inno Kurulum, Sürüm/Yayın Süreci, Uygulama İçi Güncelleme ve Uygulama İkonu
 Üç kılavuza (exe dağıtımı, güncelleme sistemi, sürüm yayınlama) göre sistem uyarlandı. Kullanıcı kararları: **kod imzalama ve lisanslama yapılmaz** (Inno betiğinde `LicenseFile`/imza yok, `LICENSE` eklenmedi).
 - **Paketleme:** `ocr_app.spec` kaldırıldı; `build_exe.py` (PyInstaller 6.22.3, `--onedir --noupx --debug=noarchive`, sabit `SOURCE_DATE_EPOCH`), `packaging/launcher.py` (sabit giriş), `launcher_version_info.txt`, onay kapısı `packaging/launcher.sha256`, `build_installer.py`, `build_verify.py`, `packaging/KusursuzOCR.iss` (sabit `AppId`, `PrivilegesRequired=lowest`, `RelaunchAfterUpdate`), `.gitattributes` (`eol=lf`), `requirements-build.txt`. Bkz. [[exe_distribution]], [[deployment]].

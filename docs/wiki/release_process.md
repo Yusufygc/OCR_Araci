@@ -8,9 +8,9 @@ Yeni sürüm **etiket** ile yayınlanır: `vX.Y.Z` etiketi push edilince GitHub 
 - **Tek kaynak:** `src/version.py` (`__version__`, `RELEASE_REPO`). Kurulum dosyası sürümü bundan alır (`/DAppVersion`). exe'nin Windows sürüm kaynağı **bilerek yükseltilmez** ([[exe_distribution]]).
 - Artış: hata düzeltme -> PATCH, özellik -> MINOR, geriye dönük uyumsuz değişiklik -> MAJOR.
 
-## Ön koşul (bir kez): güncelleme deposu
+## Güncelleme deposu
 
-`src/version.py` içindeki `RELEASE_REPO` şu an **boştur** ("sahip/depo" biçiminde doldurulmalı). Boşken uygulama içi güncelleme denetimi kapalıdır. Depo henüz GitHub'a gönderilmemişse önce oluşturup `origin` olarak ekle; sonra `RELEASE_REPO` değerini yaz ve commit'le.
+`src/version.py` içindeki `RELEASE_REPO` `Yusufygc/OCR_Araci` olarak ayarlıdır (uzak depo: `origin`, varsayılan dal `main`). Depo adı değişirse bu değer de güncellenmelidir; boş bırakılırsa uygulama içi güncelleme denetimi kapanır. Henüz hiçbir Release yayınlanmadığı için `releases/latest` yanıtı yoktur; ilk `vX.Y.Z` etiketi yayınlanana kadar denetim "güncel" ya da hata sonucu verir.
 
 ## Yayın adımları
 

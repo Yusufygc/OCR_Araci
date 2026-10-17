@@ -95,4 +95,4 @@ Gerekçeler: PyInstaller/Python yükseltme, simge, giriş betiği ya da sürüm 
 
 ## 7. Doğrulama durumu
 
-Bkz. [[log]] en üst kayıt: hangi makinede, hangi özetle, kaç denemede doğrulandığı orada yazılır. **Henüz doğrulanmayanlar:** CI'da (`windows-latest`) derlenen exe özetinin yerel özetle aynı olduğu; indirilmiş (MOTW'li) kurulum dosyasının SAC'lı başka makinede açıldığı; gerçek bir Release üzerinden uygulama içi güncelleme (güncelleme deposu henüz tanımlı değil, bkz. [[update_system]]).
+Bkz. [[log]] en üst kayıt: hangi makinede, hangi özetle, kaç denemede doğrulandığı orada yazılır. **Henüz doğrulanmayanlar:** CI'da (`windows-latest`) derlenen exe özetinin yerel özetle aynı olduğu; indirilmiş (MOTW'li) kurulum dosyasının SAC'lı başka makinede açıldığı; gerçek bir Release üzerinden uygulama içi güncelleme (henüz Release yayınlanmadı, bkz. [[update_system]]).
