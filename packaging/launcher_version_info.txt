@@ -1,0 +1,28 @@
+# UTF-8
+# Sabit sürüm kaynağı: BU DOSYAYI DEĞİŞTİRME (içeriği exe özetine girer).
+# Ürün sürümü exe'ye yazılmaz; kurulum dosyasında ve uygulamada görünür (src/version.py).
+VSVersionInfo(
+  ffi=FixedFileInfo(
+    filevers=(1, 0, 0, 0),
+    prodvers=(1, 0, 0, 0),
+    mask=0x3f,
+    flags=0x0,
+    OS=0x40004,
+    fileType=0x1,
+    subtype=0x0,
+    date=(0, 0)
+  ),
+  kids=[
+    StringFileInfo([
+      StringTable(
+        '041F04B0',
+        [StringStruct('FileDescription', 'Kusursuz OCR'),
+         StringStruct('FileVersion', '1.0.0.0'),
+         StringStruct('InternalName', 'KusursuzOCR'),
+         StringStruct('OriginalFilename', 'KusursuzOCR.exe'),
+         StringStruct('ProductName', 'Kusursuz OCR'),
+         StringStruct('ProductVersion', '1.0.0.0')])
+    ]),
+    VarFileInfo([VarStruct('Translation', [1055, 1200])])
+  ]
+)

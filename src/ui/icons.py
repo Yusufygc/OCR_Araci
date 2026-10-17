@@ -4,8 +4,12 @@ Platform-native Qt standart ikonlarını ve gerektiğinde özel görsel ikonlar�
 """
 
 from enum import Enum, auto
+from pathlib import Path
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QStyle
+
+
+APP_ICON_PATH = Path(__file__).resolve().parent / "assets" / "app_icon.png"
 
 
 class IconType(Enum):
@@ -33,6 +37,11 @@ class IconProvider:
         IconType.EXPORT_DOCX: QStyle.StandardPixmap.SP_DialogSaveButton,
         IconType.EXPORT_PDF: QStyle.StandardPixmap.SP_DialogSaveButton,
     }
+
+    @staticmethod
+    def get_app_icon() -> QIcon:
+        """Uygulama (pencere / görev çubuğu) ikonu: src/ui/assets/app_icon.png."""
+        return QIcon(str(APP_ICON_PATH))
 
     @classmethod
     def get_icon(cls, icon_type: IconType) -> QIcon:

@@ -39,6 +39,15 @@ from PySide6.QtWidgets import QApplication
 from PySide6.QtCore import Qt
 from src.ui.main_window import MainWindow
 from src.ui.styles import DARK_STYLE_SHEET
+from src.ui.icons import IconProvider
+from src.version import EXE_NAME
+
+
+def _set_taskbar_identity():
+    """Windows görev çubuğunda Python yerine uygulamanın kendi ikonunun görünmesi için süreç kimliği."""
+    if sys.platform == "win32":
+        import ctypes
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(f"{EXE_NAME}.App")
 
 
 def main():
@@ -50,9 +59,12 @@ def main():
     app = QApplication(sys.argv)
     app.setStyle("Fusion")
     app.setStyleSheet(DARK_STYLE_SHEET)
+    _set_taskbar_identity()
+    app.setWindowIcon(IconProvider.get_app_icon())
 
     window = MainWindow()
     window.show()
+    window.update_controller.schedule_startup_check()  # init içinde değil: testler ağa çıkmasın
 
     sys.exit(app.exec())
 

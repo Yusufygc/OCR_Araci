@@ -58,3 +58,8 @@ Uygulama 4 temel katmana ayrılmıştır:
 [MainWindow] <--(result_ready / error_occurred)--
 ```
 Ana UI thread'in kilitlenmesini önlemek için OCR motoru çağrıları daima `OCRWorkerThread` içinde koşturulur.
+
+---
+
+## Güncelleme Katmanı
+- **`src/utils/updater/` (`update_service`, `update_prefs`):** UI'dan bağımsız güncelleme çekirdeği ve tercihleri. **`UpdateController`** (`src/ui/update_controller.py`) Yardım menüsünü kurar, `UpdateCheckWorker` / `DownloadWorker` thread'lerini ve `UpdateDialog`'u yönetir; `MainWindow` yalnızca denetleyiciyi oluşturup menüye bağlar. Ayrıntı: [[update_system]]. Sürüm tek kaynağı `src/version.py`: [[release_process]].

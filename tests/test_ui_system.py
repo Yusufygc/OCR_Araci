@@ -35,6 +35,17 @@ class TestUISystem(unittest.TestCase):
             # Simple heuristic check: ASCII or common Turkish letters, no high Unicode surrogate emojis
             self.assertTrue(all(ord(ch) < 0x2000 for ch in text), f"Emoji found in text: {text}")
 
+    def test_app_icon_is_valid_and_multi_size(self):
+        icon = IconProvider.get_app_icon()
+        self.assertFalse(icon.isNull())
+        self.assertGreaterEqual(max(size.width() for size in icon.availableSizes()), 256)
+
+    def test_main_window_uses_application_icon(self):
+        app.setWindowIcon(IconProvider.get_app_icon())
+        from src.ui.main_window import MainWindow
+        window = MainWindow()
+        self.assertFalse(window.windowIcon().isNull())
+
     def test_icon_provider(self):
         for icon_type in IconType:
             icon = IconProvider.get_icon(icon_type)

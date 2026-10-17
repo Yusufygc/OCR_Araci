@@ -20,4 +20,7 @@ Bu sayfa, P021-OCR projesinin tüm mimari, tasarım, veri işleme ve dağıtım 
 ---
 
 ## 🚀 Dağıtım ve Altyapı
-- [[deployment]] — PyInstaller `.exe` paketleme konfigürasyonu (`ocr_app.spec`), derleme adımları ve GitHub Actions CI süreçleri.
+- [[deployment]] — Paketleme özeti (PyInstaller + Inno Setup), derleme komutu ve GitHub Actions iş akışları (`test.yml`, `release.yml`).
+- [[exe_distribution]] — Kararlı exe tasarımı, Akıllı Uygulama Denetimi (SAC) gerekçesi, özet kapısı, Inno betiği, derleme/doğrulama betikleri.
+- [[release_process]] — Sürüm numarası, `tools/release.py`, etiketle GitHub Release yayını, kontrol listesi ve geri alma.
+- [[update_system]] — Uygulama içi güncelleme: denetim, doğrulamalı indirme, sessiz kurulum, SAC için yeniden deneme.

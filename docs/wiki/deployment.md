@@ -1,40 +1,36 @@
-# Dağıtım ve Paketleme Mimarisi (PyInstaller & CI)
+# Dağıtım ve Paketleme Mimarisi (PyInstaller, Inno Setup & CI)
 
-Bu sayfa, uygulamanın Windows masaüstü için tek klasör/tek dosya `.exe` haline getirilmesini ve GitHub Actions CI süreçlerini açıklar.
+Bu sayfa, uygulamanın Windows masaüstü için paketlenmesinin ve CI süreçlerinin özetidir. Ayrıntılar ayrı sayfalardadır:
+
+- [[exe_distribution]] — kararlı exe tasarımı, Akıllı Uygulama Denetimi (SAC) gerekçesi, Inno betiği, derleme/doğrulama betikleri.
+- [[release_process]] — sürüm numarası, etiketle yayın, kontrol listesi, geri alma.
+- [[update_system]] — uygulama içi güncelleme.
 
 İlgili sayfalar: [[architecture]], [[rules]]
 
 ---
 
-## 1. PyInstaller Yapılandırması (`ocr_app.spec`)
+## 1. Paketleme Özeti
 
-- **Mod:** `console=False` (GUI pencere modu, arka plan siyah konsol penceresi açılmaz).
-- **Veri Paketleme (`datas`):**
-  - EasyOCR karakter setleri ve konfigürasyonları `venv/Lib/site-packages/easyocr` dizininden dist klasörüne paketlenir.
-- **Dahili Modüller (`hiddenimports`):**
-  - `torch`, `torchvision`, `skimage`, `scipy`, `cv2`, `numpy`, `docx`, `lxml`
-  - *Gereksinim:* `src.utils.exporters.pdf_exporter` ve PySide6 QtGui modülleri de eklenmelidir.
-- **Hariç Tutulanlar (`excludes`):**
-  - `matplotlib`, `tkinter`, `IPython`, `jupyter`, `pytest`, `unittest`
+- **Araç zinciri:** PyInstaller `6.22.3` (`requirements-build.txt`, sabit) `--onedir --windowed --noupx --debug=noarchive` + Inno Setup 6. Eski `ocr_app.spec` kaldırıldı; bağımsız değişkenler `build_exe.py` içindedir.
+- **Kararlı exe:** `packaging/launcher.py` (3 satır, `src.main.main()` çağırır) her sürümde bayt bayt aynı `KusursuzOCR.exe`'yi üretir; onaylı özet `packaging/launcher.sha256` dosyasındadır. Sürümle değişen kod `_internal` altında `.pyc` olarak durur ([[exe_distribution]]).
+- **Veri/bağımlılıklar:** `--collect-data=easyocr`, `--collect-submodules=easyocr`, `--collect-submodules=src` ve `torch`, `torchvision`, `skimage`, `scipy`, `cv2`, `numpy`, `docx`, `lxml` için `--hidden-import`. Hariç tutulanlar: `matplotlib`, `tkinter`, `IPython`, `jupyter`, `notebook`, `pytest` (`unittest` torch için bilerek hariç tutulmaz).
+- **Tesseract paketlenmez**; ayrıca kurulmalıdır. EasyOCR modelleri ilk kullanımda indirilir.
 
----
+## 2. Derleme
 
-## 2. Derleme Betiği (`build_exe.bat`)
-
-Tek tıkla derleme için proje kökünde yer alır:
-```batch
-.\venv\Scripts\pyinstaller.exe --noconfirm ocr_app.spec
+```powershell
+pip install -r requirements.txt -r requirements-build.txt
+python build_installer.py            # kararlı exe + kurulum dosyası + .sha256 (dist\installer\)
 ```
-Çıktı konumu: `dist\KusursuzOCR\KusursuzOCR.exe`.
 
----
+`build_exe.bat` aynı komutu çalıştırır. Seçenekler ve akış: [[exe_distribution]] bölüm 4. Sürüm tek kaynağı `src/version.py`'dir ([[release_process]]).
 
-## 3. GitHub Actions CI Boru Hattı (`.github/workflows/test.yml`)
+## 3. GitHub Actions
 
-- **Tetikleyiciler:** `main` veya `master` dallarına yapılan her push ve pull request.
-- **İşletim Sistemi:** `ubuntu-latest`
-- **Adımlar:**
-  1. Kod tabanını klonlar (`actions/checkout@v4`).
-  2. Python 3.10 kurar (`actions/setup-python@v5`).
-  3. Sabitlenmiş bağımlılıkları yükler (`pip install -r requirements.txt`).
-  4. Test paketini çalıştırır (`python -m unittest discover tests`).
+| İş akışı | Tetikleyici | Ortam | Görev |
+|---|---|---|---|
+| `.github/workflows/test.yml` | `main`/`master` push ve PR | `ubuntu-latest` | Python 3.10, `pip install -r requirements.txt`, `QT_QPA_PLATFORM=offscreen python -m unittest discover tests` |
+| `.github/workflows/release.yml` | `v*` etiketi push | `windows-latest` | Etiket denetimi -> testler -> Inno kur -> `python build_installer.py` (özet kapısı dahil) -> `gh release create --verify-tag` |
+
+Windows'a özgü testler (`build_verify`, kayıt defteri) `winreg` / `subprocess` taklitleriyle yazıldığı için `test.yml` Linux'ta da geçer.

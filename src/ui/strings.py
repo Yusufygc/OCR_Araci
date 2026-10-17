@@ -66,3 +66,28 @@ class UIStrings:
     MSG_ENGINE_NOT_AVAILABLE = "Seçilen motor ({engine_name}) sisteminizde hazır değil."
     MSG_ENGINE_CREATE_ERROR = "Motor oluşturma hatası: {error}"
     MSG_UNEXPECTED_ERROR = "Beklenmeyen İşlem Hatası: {error}"
+
+    # Yardım Menüsü ve Uygulama İçi Güncelleme
+    MENU_HELP = "Yardım"
+    ACT_VERSION = "Sürüm {version}"
+    ACT_CHECK_UPDATES = "Güncellemeleri Denetle"
+    ACT_AUTO_CHECK = "Açılışta Güncellemeyi Denetle"
+    UPDATE_TITLE = "Güncelleme"
+    UPDATE_AVAILABLE = "Yeni sürüm var: {version} (yüklü: {current})"
+    UPDATE_UP_TO_DATE = "Uygulama güncel (sürüm {version})."
+    UPDATE_CHECK_FAILED = "Güncelleme denetlenemedi: {error}"
+    UPDATE_NO_REPO = "Güncelleme deposu ayarlanmamış; denetim yapılamaz."
+    UPDATE_NOTES_EMPTY = "Sürüm notu yok."
+    BTN_UPDATE_NOW = "Güncelle"
+    BTN_UPDATE_LATER = "Sonra"
+    BTN_UPDATE_SKIP = "Bu Sürümü Atla"
+    BTN_UPDATE_STOP_WAIT = "Beklemeyi Bırak"
+    BTN_UPDATE_PAGE = "Sürüm Sayfası"
+    UPDATE_DOWNLOADING = "İndiriliyor: %{percent}"
+    UPDATE_INSTALLING = "Kurulum başlatılıyor; uygulama kapanıp yeniden açılacak..."
+    UPDATE_WAITING = "Windows bekleniyor... ({attempt}/{total})"
+    UPDATE_BLOCKED = (
+        "Windows kurulum dosyasını şimdilik engelledi. Dosya klasörde seçili gösterildi; çift tıklayarak "
+        "kurabilirsiniz, olmazsa birkaç dakika sonra yeniden deneyin."
+    )
+    UPDATE_FAILED = "Güncelleme başarısız: {error}"

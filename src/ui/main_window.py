@@ -11,6 +11,7 @@ from src.ui.components.image_canvas import ImageCanvas
 from src.ui.components.filter_panel import FilterPanel
 from src.ui.components.text_editor import TextEditorPanel
 from src.ui.components.overlay_manager import CanvasOverlayManager
+from src.ui.update_controller import UpdateController
 from src.ui.workers.ocr_worker import OCRWorkerThread
 from src.core.processing.image_processor import ImageProcessor
 from src.core.factories.ocr_factory import OCREngineFactory
@@ -177,6 +178,10 @@ class MainWindow(QMainWindow):
         self.overlay_manager.box_clicked.connect(self.on_box_clicked)
 
         self.statusBar().showMessage(UIStrings.STATUS_BAR_READY)
+
+        self.update_controller = UpdateController(self)
+        self.update_controller.install_menu(self.menuBar())
+        self.update_controller.quit_requested.connect(self.close)
 
     def _populate_engine_combo(self):
         self.cmb_engine.clear()

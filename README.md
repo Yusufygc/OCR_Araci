@@ -40,3 +40,11 @@ Sıra bilinçlidir: testler (5) refactor'dan (6) önce gelir; refactor görevler
 
 ## İnsan aksiyonu bekleyenler (ajan yapmaz)
 - `tasks/W0-001-missing-license.md`: LICENSE eksik (1 öğe)
+
+## Kurulum (Windows)
+
+Son kullanıcı için: [Releases](../../releases) sayfasından `KusursuzOCR-Setup-X.Y.Z.exe` dosyasını indirip çalıştırın. Kurulum yönetici izni istemez; sonraki sürümlerde uygulama kendi içinden güncellenir (Yardım -> Güncellemeleri Denetle).
+
+- Kurulum dosyası **imzasızdır**. SmartScreen uyarısında "Ek bilgi -> Yine de çalıştır" seçin. Akıllı Uygulama Denetimi engellerse bu seçenek çıkmaz; birkaç dakika sonra aynı dosyayı yeniden çalıştırın.
+- Tesseract motoru için [Tesseract-OCR](https://github.com/UB-Mannheim/tesseract/wiki) ayrıca kurulmalıdır. EasyOCR modelleri ilk kullanımda indirilir (internet gerekir).
+- Geliştirici belgeleri: `docs/wiki/deployment.md`, `docs/wiki/exe_distribution.md`, `docs/wiki/release_process.md`, `docs/wiki/update_system.md`.

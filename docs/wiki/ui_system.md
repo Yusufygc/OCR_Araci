@@ -85,3 +85,13 @@ btn_reset.setIcon(IconProvider.get_icon(IconType.RESET_FILTERS))
 - **Çoklu bölge (`multi_region`):** Strateji bölgeleri görsel koordinatlarında tuttuğu için worker'a kırpım değil `ImageCanvas.get_full_cv_image()` (tam görsel) verilir; `MultiRegionStrategy` her bölgeyi kendisi keser ve kutuları ofsetler.
 - **`CanvasOverlayManager.clear()`:** `QGraphicsScene.clear()` (yeni görsel/filtre) öğelerin C++ nesnesini zaten sildiği için `removeItem` çağrısı `RuntimeError` yakalanarak güvenli yapıldı; aksi halde OCR sonrası ikinci OCR, filtre değişimi veya yeni görsel yükleme çöküyordu.
 - Testler: `tests/test_main_window_ocr_flow.py`, `tests/test_overlay_manager.py`. Bkz. [[ocr_engines]].
+
+## 8. Yardım Menüsü ve Güncelleme Penceresi
+- `MainWindow` menü çubuğunda **Yardım**: `Sürüm X.Y.Z` (pasif), `Güncellemeleri Denetle`, `Açılışta Güncellemeyi Denetle` (işaretli kutu, `~/.kusursuzocr/updates.json`).
+- `UpdateDialog` yalnızca görünümdür (indirme çubuğu, "Windows bekleniyor...", `Beklemeyi Bırak`, `Sürüm Sayfası`, `Bu Sürümü Atla`); mantık `UpdateController`'dadır. Tüm metinler `UIStrings` içindedir. Akış ve güvenlik: [[update_system]].
+
+## 9. Uygulama İkonu
+- **Tasarım:** koyu zemin, açık renkli belge (metin satırları) ve etrafında tema yeşili (`#00e676`) tarama çerçevesi + tarama çizgisi. `tools/make_icon.py` Pillow ile üretir (dış dosya yok): `packaging/app_icon.ico` (16/24/32/48/64/128/256 px; exe, Inno kurulum sihirbazı, Başlat menüsü kısayolu ve Gezgin'deki dosya/dizin ikonu) ve `src/ui/assets/app_icon.png` (256 px; pencere ve görev çubuğu).
+- **Çalışma zamanı:** `IconProvider.get_app_icon()` PNG'yi yükler; `main.py` `app.setWindowIcon(...)` ile tüm pencere ve diyaloglara uygular ve `SetCurrentProcessExplicitAppUserModelID` ile görev çubuğunda Python yerine uygulamanın ikonunu gösterir.
+- **Paketleme:** `.ico` `--icon` ile exe'ye gömülür (exe özetine girer, [[exe_distribution]]); `src/ui/assets` `--add-data` ile veri dosyası olarak `_internal` altına kopyalanır. Kurulum sihirbazı `SetupIconFile=app_icon.ico` kullanır.
+- Testler: `tests/test_ui_system.py` (ikon geçerli, çok boyutlu, ana pencerede var), `tests/test_release_packaging.py` (ico özeti ve boyutları, PyInstaller bayrakları).
